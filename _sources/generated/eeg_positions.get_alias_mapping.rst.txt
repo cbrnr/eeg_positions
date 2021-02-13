@@ -1,0 +1,11 @@
+﻿eeg\_positions.get\_alias\_mapping
+==================================
+
+.. currentmodule:: eeg_positions
+
+.. autofunction:: get_alias_mapping
+
+.. _sphx_glr_backreferences_eeg_positions.get_alias_mapping:
+
+.. minigallery:: eeg_positions.get_alias_mapping
+    :add-heading:

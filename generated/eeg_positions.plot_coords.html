@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eeg_positions.plot_coords &#8212; eeg_positions 1.1.0.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changelog" href="../changes.html" />
+    <link rel="prev" title="eeg_positions.get_alias_mapping" href="eeg_positions.get_alias_mapping.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">eeg_positions</a></h1>
+
+
+
+<p class="blurb">Compute and plot standard EEG electrode positions.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=sappelhoff&repo=eeg_positions&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.find_point_at_fraction.html">eeg_positions.find_point_at_fraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_elec_coords.html">eeg_positions.get_elec_coords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_available_elec_names.html">eeg_positions.get_available_elec_names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_alias_mapping.html">eeg_positions.get_alias_mapping</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eeg_positions.plot_coords</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples-using-eeg-positions-plot-coords">Examples using <code class="docutils literal notranslate"><span class="pre">eeg_positions.plot_coords</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API Documentation</a><ul>
+      <li>Previous: <a href="eeg_positions.get_alias_mapping.html" title="previous chapter">eeg_positions.get_alias_mapping</a></li>
+      <li>Next: <a href="../changes.html" title="next chapter">Changelog</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="eeg-positions-plot-coords">
+<h1>eeg_positions.plot_coords<a class="headerlink" href="#eeg-positions-plot-coords" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="eeg_positions.plot_coords">
+<code class="sig-prename descclassname">eeg_positions.</code><code class="sig-name descname">plot_coords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coords</span></em>, <em class="sig-param"><span class="n">scatter_kwargs</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">text_kwargs</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eeg_positions/viz.html#plot_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eeg_positions.plot_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot standard EEG electrode coordinates.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>coords</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.3.0.dev0+712.gfc9fdba65)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt><dd><p>The standard EEG electrode coordinates as computed on a sphere.
+A pandas DataFrame object with the columns <code class="docutils literal notranslate"><span class="pre">&quot;label&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code>, and optionally <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code>.</p>
+</dd>
+<dt><strong>scatter_kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Optional keyword arguments to be passed to the
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.scatter.html#matplotlib.axes.Axes.scatter" title="(in Matplotlib v3.3.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.scatter()</span></code></a>
+or its 3D variant, depending on the dimensions of <cite>coords</cite>.</p>
+</dd>
+<dt><strong>text_kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Optional keyword arguments to be passed to the
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.text.html#matplotlib.axes.Axes.text" title="(in Matplotlib v3.3.4)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.axes.Axes.text()</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>fig</strong><span class="classifier"><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code></a></span></dt><dd><p>The Figure object.</p>
+</dd>
+<dt><strong>ax</strong><span class="classifier"><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a></span></dt><dd><p>The Axes object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="examples-using-eeg-positions-plot-coords">
+<span id="sphx-glr-backreferences-eeg-positions-plot-coords"></span><h2>Examples using <code class="docutils literal notranslate"><span class="pre">eeg_positions.plot_coords</span></code><a class="headerlink" href="#examples-using-eeg-positions-plot-coords" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Get specific electrodes and use aliases"><div class="figure align-default" id="id1">
+<img alt="Get specific electrodes and use aliases" src="../_images/sphx_glr_use_elec_names_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/use_elec_names.html#sphx-glr-auto-examples-use-elec-names-py"><span class="std std-ref">Get specific electrodes and use aliases</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Plot electrode positions"><div class="figure align-default" id="id2">
+<img alt="Plot electrode positions" src="../_images/sphx_glr_plot_positions_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_positions.html#sphx-glr-auto-examples-plot-positions-py"><span class="std std-ref">Plot electrode positions</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-clear"></div></div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018-2021, Stefan Appelhoff.
+      
+      |
+      <a href="../_sources/generated/eeg_positions.plot_coords.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

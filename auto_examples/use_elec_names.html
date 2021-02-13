@@ -1,0 +1,620 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get specific electrodes and use aliases &#8212; eeg_positions 1.1.0.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Plot electrode positions" href="plot_positions.html" />
+    <link rel="prev" title="Examples" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">eeg_positions</a></h1>
+
+
+
+<p class="blurb">Compute and plot standard EEG electrode positions.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=sappelhoff&repo=eeg_positions&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Get specific electrodes and use aliases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_positions.html">Plot electrode positions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use_mne.html">Use <code class="docutils literal notranslate"><span class="pre">eeg_positions</span></code> with MNE-Python</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Examples</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Examples</a></li>
+      <li>Next: <a href="plot_positions.html" title="next chapter">Plot electrode positions</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-use-elec-names-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="get-specific-electrodes-and-use-aliases">
+<span id="sphx-glr-auto-examples-use-elec-names-py"></span><h1>Get specific electrodes and use aliases<a class="headerlink" href="#get-specific-electrodes-and-use-aliases" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Copyright (c) 2018-2021, Stefan Appelhoff</span>
+<span class="c1"># BSD-3-Clause</span>
+</pre></div>
+</div>
+<p>We need to import some functions</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a>
+
+<span class="kn">from</span> <span class="nn">eeg_positions</span> <span class="kn">import</span> <span class="p">(</span>
+    <a href="../generated/eeg_positions.get_alias_mapping.html#eeg_positions.get_alias_mapping" title="eeg_positions.get_alias_mapping" class="sphx-glr-backref-module-eeg_positions sphx-glr-backref-type-py-function"><span class="n">get_alias_mapping</span></a><span class="p">,</span>
+    <a href="../generated/eeg_positions.get_available_elec_names.html#eeg_positions.get_available_elec_names" title="eeg_positions.get_available_elec_names" class="sphx-glr-backref-module-eeg_positions sphx-glr-backref-type-py-function"><span class="n">get_available_elec_names</span></a><span class="p">,</span>
+    <a href="../generated/eeg_positions.get_elec_coords.html#eeg_positions.get_elec_coords" title="eeg_positions.get_elec_coords" class="sphx-glr-backref-module-eeg_positions sphx-glr-backref-type-py-function"><span class="n">get_elec_coords</span></a><span class="p">,</span>
+    <a href="../generated/eeg_positions.plot_coords.html#eeg_positions.plot_coords" title="eeg_positions.plot_coords" class="sphx-glr-backref-module-eeg_positions sphx-glr-backref-type-py-function"><span class="n">plot_coords</span></a><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s assume we need only a small subset of electrodes for our work.
+We can print all available electrode names in <code class="docutils literal notranslate"><span class="pre">eeg_positions</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">elec_names</span></a> <span class="o">=</span> <a href="../generated/eeg_positions.get_available_elec_names.html#eeg_positions.get_available_elec_names" title="eeg_positions.get_available_elec_names" class="sphx-glr-backref-module-eeg_positions sphx-glr-backref-type-py-function"><span class="n">get_available_elec_names</span></a><span class="p">()</span>
+<a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">elec_names</span></a><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;M2&#39;,
+ &#39;M1&#39;,
+ &#39;A2&#39;,
+ &#39;A1&#39;,
+ &#39;NAS&#39;,
+ &#39;RPA&#39;,
+ &#39;LPA&#39;,
+ &#39;POO8h&#39;,
+ &#39;POO6&#39;,
+ &#39;POO6h&#39;,
+ &#39;POO4&#39;,
+ &#39;POO4h&#39;,
+ &#39;POO2&#39;,
+ &#39;POO2h&#39;,
+ &#39;POO1h&#39;,
+ &#39;POO1&#39;,
+ &#39;POO3h&#39;,
+ &#39;POO3&#39;,
+ &#39;POO5h&#39;,
+ &#39;POO5&#39;,
+ &#39;POO7h&#39;,
+ &#39;PO8h&#39;,
+ &#39;PO6&#39;,
+ &#39;PO6h&#39;,
+ &#39;PO4&#39;,
+ &#39;PO4h&#39;,
+ &#39;PO2&#39;,
+ &#39;PO2h&#39;,
+ &#39;PO1h&#39;,
+ &#39;PO1&#39;,
+ &#39;PO3h&#39;,
+ &#39;PO3&#39;,
+ &#39;PO5h&#39;,
+ &#39;PO5&#39;,
+ &#39;PO7h&#39;,
+ &#39;PPO8h&#39;,
+ &#39;PPO6&#39;,
+ &#39;PPO6h&#39;,
+ &#39;PPO4&#39;,
+ &#39;PPO4h&#39;,
+ &#39;PPO2&#39;,
+ &#39;PPO2h&#39;,
+ &#39;PPO1h&#39;,
+ &#39;PPO1&#39;,
+ &#39;PPO3h&#39;,
+ &#39;PPO3&#39;,
+ &#39;PPO5h&#39;,
+ &#39;PPO5&#39;,
+ &#39;PPO7h&#39;,
+ &#39;P8h&#39;,
+ &#39;P6&#39;,
+ &#39;P6h&#39;,
+ &#39;P4&#39;,
+ &#39;P4h&#39;,
+ &#39;P2&#39;,
+ &#39;P2h&#39;,
+ &#39;P1h&#39;,
+ &#39;P1&#39;,
+ &#39;P3h&#39;,
+ &#39;P3&#39;,
+ &#39;P5h&#39;,
+ &#39;P5&#39;,
+ &#39;P7h&#39;,
+ &#39;TPP8h&#39;,
+ &#39;CPP6&#39;,
+ &#39;CPP6h&#39;,
+ &#39;CPP4&#39;,
+ &#39;CPP4h&#39;,
+ &#39;CPP2&#39;,
+ &#39;CPP2h&#39;,
+ &#39;CPP1h&#39;,
+ &#39;CPP1&#39;,
+ &#39;CPP3h&#39;,
+ &#39;CPP3&#39;,
+ &#39;CPP5h&#39;,
+ &#39;CPP5&#39;,
+ &#39;TPP7h&#39;,
+ &#39;TP8h&#39;,
+ &#39;CP6&#39;,
+ &#39;CP6h&#39;,
+ &#39;CP4&#39;,
+ &#39;CP4h&#39;,
+ &#39;CP2&#39;,
+ &#39;CP2h&#39;,
+ &#39;CP1h&#39;,
+ &#39;CP1&#39;,
+ &#39;CP3h&#39;,
+ &#39;CP3&#39;,
+ &#39;CP5h&#39;,
+ &#39;CP5&#39;,
+ &#39;TP7h&#39;,
+ &#39;TTP8h&#39;,
+ &#39;CCP6&#39;,
+ &#39;CCP6h&#39;,
+ &#39;CCP4&#39;,
+ &#39;CCP4h&#39;,
+ &#39;CCP2&#39;,
+ &#39;CCP2h&#39;,
+ &#39;CCP1h&#39;,
+ &#39;CCP1&#39;,
+ &#39;CCP3h&#39;,
+ &#39;CCP3&#39;,
+ &#39;CCP5h&#39;,
+ &#39;CCP5&#39;,
+ &#39;TTP7h&#39;,
+ &#39;FTT8h&#39;,
+ &#39;FCC6&#39;,
+ &#39;FCC6h&#39;,
+ &#39;FCC4&#39;,
+ &#39;FCC4h&#39;,
+ &#39;FCC2&#39;,
+ &#39;FCC2h&#39;,
+ &#39;FCC1h&#39;,
+ &#39;FCC1&#39;,
+ &#39;FCC3h&#39;,
+ &#39;FCC3&#39;,
+ &#39;FCC5h&#39;,
+ &#39;FCC5&#39;,
+ &#39;FTT7h&#39;,
+ &#39;FT8h&#39;,
+ &#39;FC6&#39;,
+ &#39;FC6h&#39;,
+ &#39;FC4&#39;,
+ &#39;FC4h&#39;,
+ &#39;FC2&#39;,
+ &#39;FC2h&#39;,
+ &#39;FC1h&#39;,
+ &#39;FC1&#39;,
+ &#39;FC3h&#39;,
+ &#39;FC3&#39;,
+ &#39;FC5h&#39;,
+ &#39;FC5&#39;,
+ &#39;FT7h&#39;,
+ &#39;FFT8h&#39;,
+ &#39;FFC6&#39;,
+ &#39;FFC6h&#39;,
+ &#39;FFC4&#39;,
+ &#39;FFC4h&#39;,
+ &#39;FFC2&#39;,
+ &#39;FFC2h&#39;,
+ &#39;FFC1h&#39;,
+ &#39;FFC1&#39;,
+ &#39;FFC3h&#39;,
+ &#39;FFC3&#39;,
+ &#39;FFC5h&#39;,
+ &#39;FFC5&#39;,
+ &#39;FFT7h&#39;,
+ &#39;F8h&#39;,
+ &#39;F6&#39;,
+ &#39;F6h&#39;,
+ &#39;F4&#39;,
+ &#39;F4h&#39;,
+ &#39;F2&#39;,
+ &#39;F2h&#39;,
+ &#39;F1h&#39;,
+ &#39;F1&#39;,
+ &#39;F3h&#39;,
+ &#39;F3&#39;,
+ &#39;F5h&#39;,
+ &#39;F5&#39;,
+ &#39;F7h&#39;,
+ &#39;AFF8h&#39;,
+ &#39;AFF6&#39;,
+ &#39;AFF6h&#39;,
+ &#39;AFF4&#39;,
+ &#39;AFF4h&#39;,
+ &#39;AFF2&#39;,
+ &#39;AFF2h&#39;,
+ &#39;AFF1h&#39;,
+ &#39;AFF1&#39;,
+ &#39;AFF3h&#39;,
+ &#39;AFF3&#39;,
+ &#39;AFF5h&#39;,
+ &#39;AFF5&#39;,
+ &#39;AFF7h&#39;,
+ &#39;AF8h&#39;,
+ &#39;AF6&#39;,
+ &#39;AF6h&#39;,
+ &#39;AF4&#39;,
+ &#39;AF4h&#39;,
+ &#39;AF2&#39;,
+ &#39;AF2h&#39;,
+ &#39;AF1h&#39;,
+ &#39;AF1&#39;,
+ &#39;AF3h&#39;,
+ &#39;AF3&#39;,
+ &#39;AF5h&#39;,
+ &#39;AF5&#39;,
+ &#39;AF7h&#39;,
+ &#39;AFp8h&#39;,
+ &#39;AFp6&#39;,
+ &#39;AFp6h&#39;,
+ &#39;AFp4&#39;,
+ &#39;AFp4h&#39;,
+ &#39;AFp2&#39;,
+ &#39;AFp2h&#39;,
+ &#39;AFp1h&#39;,
+ &#39;AFp1&#39;,
+ &#39;AFp3h&#39;,
+ &#39;AFp3&#39;,
+ &#39;AFp5h&#39;,
+ &#39;AFp5&#39;,
+ &#39;AFp7h&#39;,
+ &#39;O1h&#39;,
+ &#39;O1&#39;,
+ &#39;POO7&#39;,
+ &#39;PO7&#39;,
+ &#39;PPO7&#39;,
+ &#39;P7&#39;,
+ &#39;TPP7&#39;,
+ &#39;TP7&#39;,
+ &#39;TTP7&#39;,
+ &#39;FTT7&#39;,
+ &#39;FT7&#39;,
+ &#39;FFT7&#39;,
+ &#39;F7&#39;,
+ &#39;AFF7&#39;,
+ &#39;AF7&#39;,
+ &#39;AFp7&#39;,
+ &#39;Fp1&#39;,
+ &#39;Fp1h&#39;,
+ &#39;O2h&#39;,
+ &#39;O2&#39;,
+ &#39;POO8&#39;,
+ &#39;PO8&#39;,
+ &#39;PPO8&#39;,
+ &#39;P8&#39;,
+ &#39;TPP8&#39;,
+ &#39;TP8&#39;,
+ &#39;TTP8&#39;,
+ &#39;FTT8&#39;,
+ &#39;FT8&#39;,
+ &#39;FFT8&#39;,
+ &#39;F8&#39;,
+ &#39;AFF8&#39;,
+ &#39;AF8&#39;,
+ &#39;AFp8&#39;,
+ &#39;Fp2&#39;,
+ &#39;Fp2h&#39;,
+ &#39;OI1h&#39;,
+ &#39;OI1&#39;,
+ &#39;POO9h&#39;,
+ &#39;PO9h&#39;,
+ &#39;PPO9h&#39;,
+ &#39;P9h&#39;,
+ &#39;TPP9h&#39;,
+ &#39;TP9h&#39;,
+ &#39;TTP9h&#39;,
+ &#39;FTT9h&#39;,
+ &#39;FT9h&#39;,
+ &#39;FFT9h&#39;,
+ &#39;F9h&#39;,
+ &#39;AFF9h&#39;,
+ &#39;AF9h&#39;,
+ &#39;AFp9h&#39;,
+ &#39;NFp1&#39;,
+ &#39;NFp1h&#39;,
+ &#39;OI2h&#39;,
+ &#39;OI2&#39;,
+ &#39;POO10h&#39;,
+ &#39;PO10h&#39;,
+ &#39;PPO10h&#39;,
+ &#39;P10h&#39;,
+ &#39;TPP10h&#39;,
+ &#39;TP10h&#39;,
+ &#39;TTP10h&#39;,
+ &#39;FTT10h&#39;,
+ &#39;FT10h&#39;,
+ &#39;FFT10h&#39;,
+ &#39;F10h&#39;,
+ &#39;AFF10h&#39;,
+ &#39;AF10h&#39;,
+ &#39;AFp10h&#39;,
+ &#39;NFp2&#39;,
+ &#39;NFp2h&#39;,
+ &#39;T10h&#39;,
+ &#39;T8&#39;,
+ &#39;T8h&#39;,
+ &#39;C6&#39;,
+ &#39;C6h&#39;,
+ &#39;C4&#39;,
+ &#39;C4h&#39;,
+ &#39;C2&#39;,
+ &#39;C2h&#39;,
+ &#39;C1h&#39;,
+ &#39;C1&#39;,
+ &#39;C3h&#39;,
+ &#39;C3&#39;,
+ &#39;C5h&#39;,
+ &#39;C5&#39;,
+ &#39;T7h&#39;,
+ &#39;T7&#39;,
+ &#39;T9h&#39;,
+ &#39;I1h&#39;,
+ &#39;I1&#39;,
+ &#39;POO9&#39;,
+ &#39;PO9&#39;,
+ &#39;PPO9&#39;,
+ &#39;P9&#39;,
+ &#39;TPP9&#39;,
+ &#39;TP9&#39;,
+ &#39;TTP9&#39;,
+ &#39;T9&#39;,
+ &#39;FTT9&#39;,
+ &#39;FT9&#39;,
+ &#39;FFT9&#39;,
+ &#39;F9&#39;,
+ &#39;AFF9&#39;,
+ &#39;AF9&#39;,
+ &#39;AFp9&#39;,
+ &#39;N1&#39;,
+ &#39;N1h&#39;,
+ &#39;I2h&#39;,
+ &#39;I2&#39;,
+ &#39;POO10&#39;,
+ &#39;PO10&#39;,
+ &#39;PPO10&#39;,
+ &#39;P10&#39;,
+ &#39;TPP10&#39;,
+ &#39;TP10&#39;,
+ &#39;TTP10&#39;,
+ &#39;T10&#39;,
+ &#39;FTT10&#39;,
+ &#39;FT10&#39;,
+ &#39;FFT10&#39;,
+ &#39;F10&#39;,
+ &#39;AFF10&#39;,
+ &#39;AF10&#39;,
+ &#39;AFp10&#39;,
+ &#39;N2&#39;,
+ &#39;N2h&#39;,
+ &#39;Iz&#39;,
+ &#39;OIz&#39;,
+ &#39;Oz&#39;,
+ &#39;POOz&#39;,
+ &#39;POz&#39;,
+ &#39;PPOz&#39;,
+ &#39;Pz&#39;,
+ &#39;CPPz&#39;,
+ &#39;CPz&#39;,
+ &#39;CCPz&#39;,
+ &#39;Cz&#39;,
+ &#39;FCCz&#39;,
+ &#39;FCz&#39;,
+ &#39;FFCz&#39;,
+ &#39;Fz&#39;,
+ &#39;AFFz&#39;,
+ &#39;AFz&#39;,
+ &#39;AFpz&#39;,
+ &#39;Fpz&#39;,
+ &#39;NFpz&#39;,
+ &#39;Nz&#39;]
+</pre></div>
+</div>
+<p>A keen eye may have identified some “odd” electrodes, that are not really part
+of the 10-20, 10-10, or 10-05 systems: <code class="docutils literal notranslate"><span class="pre">'A1',</span> <span class="pre">'A2',</span> <span class="pre">'M1',</span> <span class="pre">'M2'</span></code></p>
+<p>These are supplied with <code class="docutils literal notranslate"><span class="pre">eeg_positions</span></code> for convenience as so-called “alias”
+positions. See below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alias_mapping</span></a> <span class="o">=</span> <a href="../generated/eeg_positions.get_alias_mapping.html#eeg_positions.get_alias_mapping" title="eeg_positions.get_alias_mapping" class="sphx-glr-backref-module-eeg_positions sphx-glr-backref-type-py-function"><span class="n">get_alias_mapping</span></a><span class="p">()</span>
+<span class="k">for</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">key</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">val</span></a> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">alias_mapping</span></a><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">key</span></a><span class="si">}</span><span class="s2">: </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">val</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>A1: LPA+(-0.1, -0.01, -0.01)
+A2: RPA+(0.1, -0.01, -0.01)
+M1: TP9
+M2: TP10
+</pre></div>
+</div>
+<p>We see that for example <cite>A1</cite> is mapped to a position near the left preauricular point
+(LPA). This position is meant to reflect that the A1 electrode is typically a clip-on
+electrode applied to the earlobe.</p>
+<p>Similarly, the <cite>M1</cite> electrode is typically applied to the left mastoid on the head of
+a study participant. Its position approximately coincides with the <cite>TP9</cite> position.</p>
+<p><strong>But now back to the topic: We want to get coordinates for a small subset of
+electrodes!</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Just use `elec_names`</span>
+<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">coords</span></a> <span class="o">=</span> <a href="../generated/eeg_positions.get_elec_coords.html#eeg_positions.get_elec_coords" title="eeg_positions.get_elec_coords" class="sphx-glr-backref-module-eeg_positions sphx-glr-backref-type-py-function"><span class="n">get_elec_coords</span></a><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">elec_names</span></a><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A1&quot;</span><span class="p">,</span> <span class="s2">&quot;A2&quot;</span><span class="p">,</span> <span class="s2">&quot;FC3&quot;</span><span class="p">,</span> <span class="s2">&quot;CP4&quot;</span><span class="p">,</span> <span class="s2">&quot;M1&quot;</span><span class="p">,</span> <span class="s2">&quot;LPA&quot;</span><span class="p">,</span> <span class="s2">&quot;RPA&quot;</span><span class="p">,</span> <span class="s2">&quot;T10&quot;</span><span class="p">],</span>
+    <span class="n">drop_landmarks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">dim</span><span class="o">=</span><span class="s2">&quot;3d&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.head.html#pandas.DataFrame.head" title="pandas.DataFrame.head" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-method"><span class="n">coords</span><span class="o">.</span><span class="n">head</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>label</th>
+      <th>x</th>
+      <th>y</th>
+      <th>z</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>A1</td>
+      <td>-1.1000</td>
+      <td>-0.0100</td>
+      <td>-0.0100</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>A2</td>
+      <td>1.1000</td>
+      <td>-0.0100</td>
+      <td>-0.0100</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>CP4</td>
+      <td>0.5547</td>
+      <td>-0.3048</td>
+      <td>0.7742</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>FC3</td>
+      <td>-0.5547</td>
+      <td>0.3048</td>
+      <td>0.7742</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>LPA</td>
+      <td>-1.0000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Plot it, and see how close LPA and A1 (and RPA and A2) are in space.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <a href="../generated/eeg_positions.plot_coords.html#eeg_positions.plot_coords" title="eeg_positions.plot_coords" class="sphx-glr-backref-module-eeg_positions sphx-glr-backref-type-py-function"><span class="n">plot_coords</span></a><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">coords</span></a><span class="p">,</span> <span class="n">text_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.axis.html#matplotlib.axes.Axes.axis" title="matplotlib.axes.Axes.axis" class="sphx-glr-backref-module-matplotlib-axes sphx-glr-backref-type-py-method"><span class="n">ax</span><span class="o">.</span><span class="n">axis</span></a><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<a href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a>
+</pre></div>
+</div>
+<img alt="use elec names" class="sphx-glr-single-img" src="../_images/sphx_glr_use_elec_names_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Figure size 640x480 with 1 Axes&gt;
+</pre></div>
+</div>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-use-elec-names-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/0800e276b7d8f3445a3420481d052328/use_elec_names.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">use_elec_names.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/348a3e7b1c9619460c9bcaeffbfc1563/use_elec_names.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">use_elec_names.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018-2021, Stefan Appelhoff.
+      
+      |
+      <a href="../_sources/auto_examples/use_elec_names.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

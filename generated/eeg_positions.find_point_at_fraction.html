@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eeg_positions.find_point_at_fraction &#8212; eeg_positions 1.1.0.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eeg_positions.get_elec_coords" href="eeg_positions.get_elec_coords.html" />
+    <link rel="prev" title="API Documentation" href="../api.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">eeg_positions</a></h1>
+
+
+
+<p class="blurb">Compute and plot standard EEG electrode positions.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=sappelhoff&repo=eeg_positions&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eeg_positions.find_point_at_fraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples-using-eeg-positions-find-point-at-fraction">Examples using <code class="docutils literal notranslate"><span class="pre">eeg_positions.find_point_at_fraction</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_elec_coords.html">eeg_positions.get_elec_coords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_available_elec_names.html">eeg_positions.get_available_elec_names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_alias_mapping.html">eeg_positions.get_alias_mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.plot_coords.html">eeg_positions.plot_coords</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API Documentation</a><ul>
+      <li>Previous: <a href="../api.html" title="previous chapter">API Documentation</a></li>
+      <li>Next: <a href="eeg_positions.get_elec_coords.html" title="next chapter">eeg_positions.get_elec_coords</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="eeg-positions-find-point-at-fraction">
+<h1>eeg_positions.find_point_at_fraction<a class="headerlink" href="#eeg-positions-find-point-at-fraction" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="eeg_positions.find_point_at_fraction">
+<code class="sig-prename descclassname">eeg_positions.</code><code class="sig-name descname">find_point_at_fraction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span></em>, <em class="sig-param"><span class="n">p3</span></em>, <em class="sig-param"><span class="n">frac</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eeg_positions/utils.html#find_point_at_fraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eeg_positions.find_point_at_fraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a point on an arc spanned by three points.</p>
+<p>Given three points <cite>p1</cite>, <cite>p2</cite> and <cite>p3</cite> on a sphere with origin (0, 0, 0),
+find the coordinates of a <cite>point</cite> at a fraction <cite>frac</cite> of the overall
+distance on an arc spanning from <cite>p1</cite> over <cite>p2</cite> to <cite>p3</cite>. Given this
+assumption, for fractions of zero, <cite>point</cite> will equal <cite>p1</cite>; for fractions
+of one, <cite>point</cite> will equal <cite>p3</cite>; and for fractions of one half, <cite>point</cite>
+will equal <cite>p2</cite> <a class="reference internal" href="#r6114884abc0c-1" id="id1">[1]</a>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>p1, p2, p3</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a></span></dt><dd><p>Each tuple containing x, y, z cartesian coordinates.</p>
+</dd>
+<dt><strong>frac</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>Fraction of distance from <cite>p1</cite> to <cite>p3</cite> over p2` at which
+to find coordinates of <cite>point</cite>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>point</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a></span></dt><dd><p>The x, y, z cartesian coordinates of the point at fraction.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The assumptions of this function require <cite>p1</cite>, <cite>p2</cite> and <cite>p3</cite> to be
+equidistant from the origin. They must not be collinear (i.e., all be
+along one line) and none of the points may be equal.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r6114884abc0c-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Nominal Animal
+(<a class="reference external" href="https://math.stackexchange.com/users/318422/nominal-animal">https://math.stackexchange.com/users/318422/nominal-animal</a>),
+find intermediate points on small circle of a sphere,
+URL (version: 2018-06-02): <a class="reference external" href="https://math.stackexchange.com/q/2805204">https://math.stackexchange.com/q/2805204</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p3</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_point_at_fraction</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">frac</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+<span class="go">(1.0, 0.0, 0.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_point_at_fraction</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">frac</span><span class="o">=.</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">(0.0, 0.0, 1.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_point_at_fraction</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">frac</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">(-1.0, 0.0, 0.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_point_at_fraction</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">frac</span><span class="o">=.</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">(0.5878, 0.0, 0.809)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="section" id="examples-using-eeg-positions-find-point-at-fraction">
+<span id="sphx-glr-backreferences-eeg-positions-find-point-at-fraction"></span><h2>Examples using <code class="docutils literal notranslate"><span class="pre">eeg_positions.find_point_at_fraction</span></code><a class="headerlink" href="#examples-using-eeg-positions-find-point-at-fraction" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-clear"></div></div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018-2021, Stefan Appelhoff.
+      
+      |
+      <a href="../_sources/generated/eeg_positions.find_point_at_fraction.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

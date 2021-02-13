@@ -1,0 +1,11 @@
+﻿eeg\_positions.find\_point\_at\_fraction
+========================================
+
+.. currentmodule:: eeg_positions
+
+.. autofunction:: find_point_at_fraction
+
+.. _sphx_glr_backreferences_eeg_positions.find_point_at_fraction:
+
+.. minigallery:: eeg_positions.find_point_at_fraction
+    :add-heading:

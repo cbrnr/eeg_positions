@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eeg_positions.utils &#8212; eeg_positions 1.1.0.dev0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">eeg_positions</a></h1>
+
+
+
+<p class="blurb">Compute and plot standard EEG electrode positions.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=sappelhoff&repo=eeg_positions&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for eeg_positions.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functions to calculate and plot standard EEG electrode position systems.&quot;&quot;&quot;</span>
+<span class="c1"># Copyright (c) 2018-2021, Stefan Appelhoff</span>
+<span class="c1"># BSD-3-Clause</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="find_point_at_fraction"><a class="viewcode-back" href="../../generated/eeg_positions.find_point_at_fraction.html#eeg_positions.find_point_at_fraction">[docs]</a><span class="k">def</span> <span class="nf">find_point_at_fraction</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">frac</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find a point on an arc spanned by three points.</span>
+
+<span class="sd">    Given three points `p1`, `p2` and `p3` on a sphere with origin (0, 0, 0),</span>
+<span class="sd">    find the coordinates of a `point` at a fraction `frac` of the overall</span>
+<span class="sd">    distance on an arc spanning from `p1` over `p2` to `p3`. Given this</span>
+<span class="sd">    assumption, for fractions of zero, `point` will equal `p1`; for fractions</span>
+<span class="sd">    of one, `point` will equal `p3`; and for fractions of one half, `point`</span>
+<span class="sd">    will equal `p2` [1]_.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p1, p2, p3 : tuple</span>
+<span class="sd">        Each tuple containing x, y, z cartesian coordinates.</span>
+<span class="sd">    frac : float</span>
+<span class="sd">        Fraction of distance from `p1` to `p3` over p2` at which</span>
+<span class="sd">        to find coordinates of `point`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    point : tuple</span>
+<span class="sd">        The x, y, z cartesian coordinates of the point at fraction.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The assumptions of this function require `p1`, `p2` and `p3` to be</span>
+<span class="sd">    equidistant from the origin. They must not be collinear (i.e., all be</span>
+<span class="sd">    along one line) and none of the points may be equal.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Nominal Animal</span>
+<span class="sd">       (https://math.stackexchange.com/users/318422/nominal-animal),</span>
+<span class="sd">       find intermediate points on small circle of a sphere,</span>
+<span class="sd">       URL (version: 2018-06-02): https://math.stackexchange.com/q/2805204</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; p1 = (1., 0., 0.)</span>
+<span class="sd">    &gt;&gt;&gt; p2 = (0., 0., 1.)</span>
+<span class="sd">    &gt;&gt;&gt; p3 = (-1., 0., 0.)</span>
+<span class="sd">    &gt;&gt;&gt; find_point_at_fraction(p1, p2, p3, frac=0.)</span>
+<span class="sd">    (1.0, 0.0, 0.0)</span>
+<span class="sd">    &gt;&gt;&gt; find_point_at_fraction(p1, p2, p3, frac=.5)</span>
+<span class="sd">    (0.0, 0.0, 1.0)</span>
+<span class="sd">    &gt;&gt;&gt; find_point_at_fraction(p1, p2, p3, frac=1.)</span>
+<span class="sd">    (-1.0, 0.0, 0.0)</span>
+<span class="sd">    &gt;&gt;&gt; find_point_at_fraction(p1, p2, p3, frac=.3)</span>
+<span class="sd">    (0.5878, 0.0, 0.809)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Unpack the point tuples</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">p1</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">p2</span>
+    <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">z3</span> <span class="o">=</span> <span class="n">p3</span>
+
+    <span class="c1"># Using the cross product, find unit normal vector (xn, yn, zn)</span>
+    <span class="c1"># of the plane spanning the three points:</span>
+    <span class="n">x12</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span>
+    <span class="n">y12</span> <span class="o">=</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span>
+    <span class="n">z12</span> <span class="o">=</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">z1</span>
+    <span class="n">x13</span> <span class="o">=</span> <span class="n">x3</span> <span class="o">-</span> <span class="n">x1</span>
+    <span class="n">y13</span> <span class="o">=</span> <span class="n">y3</span> <span class="o">-</span> <span class="n">y1</span>
+    <span class="n">z13</span> <span class="o">=</span> <span class="n">z3</span> <span class="o">-</span> <span class="n">z1</span>
+
+    <span class="n">xn</span> <span class="o">=</span> <span class="n">y12</span> <span class="o">*</span> <span class="n">z13</span> <span class="o">-</span> <span class="n">z12</span> <span class="o">*</span> <span class="n">y13</span>
+    <span class="n">yn</span> <span class="o">=</span> <span class="n">z12</span> <span class="o">*</span> <span class="n">x13</span> <span class="o">-</span> <span class="n">x12</span> <span class="o">*</span> <span class="n">z13</span>
+    <span class="n">zn</span> <span class="o">=</span> <span class="n">x12</span> <span class="o">*</span> <span class="n">y13</span> <span class="o">-</span> <span class="n">y12</span> <span class="o">*</span> <span class="n">x13</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">xn</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">yn</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">zn</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Points are either collinear or share the same coordinates.&quot;</span><span class="p">)</span>
+
+    <span class="n">xn</span> <span class="o">=</span> <span class="n">xn</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">yn</span> <span class="o">=</span> <span class="n">yn</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">zn</span> <span class="o">=</span> <span class="n">zn</span> <span class="o">/</span> <span class="n">n</span>
+
+    <span class="c1"># Use dot product to get signed distance from plane to origin</span>
+    <span class="c1"># interchangeably use p1, p2, or p3 with normal vector</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">xn</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">yn</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">zn</span> <span class="o">*</span> <span class="n">z1</span>
+
+    <span class="c1"># At intersection of sphere and plane, we have a circle</span>
+    <span class="c1"># with the following center:</span>
+    <span class="n">xc</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">xn</span>
+    <span class="n">yc</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">yn</span>
+    <span class="n">zc</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">zn</span>
+
+    <span class="c1"># Construct a 2D coordinate system with the unit circle corresponding</span>
+    <span class="c1"># to the above circle with first axis towards p1 and second towards p2:</span>
+    <span class="c1"># 2D U axis unit vector</span>
+    <span class="n">xu</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">xc</span>
+    <span class="n">yu</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">yc</span>
+    <span class="n">zu</span> <span class="o">=</span> <span class="n">z1</span> <span class="o">-</span> <span class="n">zc</span>
+
+    <span class="c1"># 2D V axis unit vector</span>
+    <span class="n">xv</span> <span class="o">=</span> <span class="n">yn</span> <span class="o">*</span> <span class="n">zu</span> <span class="o">-</span> <span class="n">zn</span> <span class="o">*</span> <span class="n">yu</span>
+    <span class="n">yv</span> <span class="o">=</span> <span class="n">zn</span> <span class="o">*</span> <span class="n">xu</span> <span class="o">-</span> <span class="n">xn</span> <span class="o">*</span> <span class="n">zu</span>
+    <span class="n">zv</span> <span class="o">=</span> <span class="n">xn</span> <span class="o">*</span> <span class="n">yu</span> <span class="o">-</span> <span class="n">yn</span> <span class="o">*</span> <span class="n">xu</span>
+
+    <span class="c1"># Choose V axis towards (x2, y2, z2)</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">xc</span><span class="p">)</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">+</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">yc</span><span class="p">)</span> <span class="o">*</span> <span class="n">yv</span> <span class="o">+</span> <span class="p">(</span><span class="n">z2</span> <span class="o">-</span> <span class="n">zc</span><span class="p">)</span> <span class="o">*</span> <span class="n">zv</span>
+    <span class="k">if</span> <span class="n">v2</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">xv</span> <span class="o">=</span> <span class="o">-</span><span class="n">xv</span>
+        <span class="n">yv</span> <span class="o">=</span> <span class="o">-</span><span class="n">yv</span>
+        <span class="n">zv</span> <span class="o">=</span> <span class="o">-</span><span class="n">zv</span>
+
+    <span class="c1"># Find theta, the positive plane angle towards p3 (x3, y3, z3).</span>
+    <span class="n">xt</span> <span class="o">=</span> <span class="n">x3</span> <span class="o">-</span> <span class="n">xc</span>
+    <span class="n">yt</span> <span class="o">=</span> <span class="n">y3</span> <span class="o">-</span> <span class="n">yc</span>
+    <span class="n">zt</span> <span class="o">=</span> <span class="n">z3</span> <span class="o">-</span> <span class="n">zc</span>
+
+    <span class="n">thetau</span> <span class="o">=</span> <span class="n">xt</span> <span class="o">*</span> <span class="n">xu</span> <span class="o">+</span> <span class="n">yt</span> <span class="o">*</span> <span class="n">yu</span> <span class="o">+</span> <span class="n">zt</span> <span class="o">*</span> <span class="n">zu</span>
+    <span class="n">thetav</span> <span class="o">=</span> <span class="n">xt</span> <span class="o">*</span> <span class="n">xv</span> <span class="o">+</span> <span class="n">yt</span> <span class="o">*</span> <span class="n">yv</span> <span class="o">+</span> <span class="n">zt</span> <span class="o">*</span> <span class="n">zv</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">thetav</span><span class="p">,</span> <span class="n">thetau</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">theta</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="c1"># Add 360 degrees, or 2*Pi in radians, to make it positive</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+    <span class="c1"># Now calculate coordinates at fraction</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">xc</span> <span class="o">+</span> <span class="n">xu</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">frac</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">xv</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">frac</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">yc</span> <span class="o">+</span> <span class="n">yu</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">frac</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">yv</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">frac</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zc</span> <span class="o">+</span> <span class="n">zu</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">frac</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">zv</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">frac</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span>
+
+    <span class="c1"># Round to 4 decimals and collect the points in tuple</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">point</span></div>
+
+
+<span class="k">def</span> <span class="nf">_add_points_along_contour</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">contour</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute points along `contour` and add them to `df`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        The data with columns [&quot;label&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;].</span>
+<span class="sd">    contour : list of str</span>
+<span class="sd">        Each entry in `contour` is the label of a point, and</span>
+<span class="sd">        all points in `contour` are ordered. Must be of length</span>
+<span class="sd">        17 or 21.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        The data with columns [&quot;label&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;] and</span>
+<span class="sd">        new points (rows in `df`) along `contour` added.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">contour_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">contour</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">contour_len</span> <span class="o">==</span> <span class="mi">21</span><span class="p">:</span>
+        <span class="n">midpoint_idx</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">elif</span> <span class="n">contour_len</span> <span class="o">==</span> <span class="mi">17</span><span class="p">:</span>
+        <span class="n">midpoint_idx</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;contour must be of len 17 or 21 but is </span><span class="si">{</span><span class="n">contour_len</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get the reference points from data frame</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">_get_xyz</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">contour</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="n">_get_xyz</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">contour</span><span class="p">[</span><span class="n">midpoint_idx</span><span class="p">])</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">_get_xyz</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">contour</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Calculate all other points at fractions of distance</span>
+    <span class="n">other_ps</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">contour</span><span class="p">):</span>
+        <span class="n">other_ps</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_point_at_fraction</span><span class="p">(</span>
+            <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">frac</span><span class="o">=</span><span class="n">i</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">contour</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Append to data frame</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_append_ps_to_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">other_ps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="k">def</span> <span class="nf">_append_ps_to_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">ps</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add points `ps` to data frame `df`.</span>
+
+<span class="sd">    This function removes duplicates from `df`, always keeping</span>
+<span class="sd">    the first entry it finds.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        The data with columns [&quot;label&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;].</span>
+<span class="sd">    ps : dict</span>
+<span class="sd">        Each key is a label, with a tuple value of (x, y, z)</span>
+<span class="sd">        coordinates.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        The data with columns [&quot;label&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;],</span>
+<span class="sd">        and `ps` added.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+    <span class="n">tmp</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]</span>
+    <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Remove duplicates, keeping the first computations</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;first&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="c1"># Convenient helper function to access xyz coordinates from df</span>
+<span class="k">def</span> <span class="nf">_get_xyz</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get xyz coordinates from a pandas data frame.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        Data frame with (at least) columns x, y, z, label.</span>
+<span class="sd">    label : str</span>
+<span class="sd">        Electrode label for which to get x, y, z from `df`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x, y, z : float</span>
+<span class="sd">        Positions of electrodes on a unit sphere.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check that all labels are present</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;df must contain a column &#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Check we get exactly one row of data</span>
+    <span class="n">subdf</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">]</span>
+    <span class="n">nrows</span> <span class="o">=</span> <span class="n">subdf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">nrows</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">nrows</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected one row of data but got: </span><span class="si">{</span><span class="n">nrows</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get the data</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span>
+
+
+<span class="k">def</span> <span class="nf">_get_coords_on_circle</span><span class="p">(</span><span class="n">cx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">180</span> <span class="o">/</span> <span class="mi">20</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the cartesian coordinates [x,y] for a number of points on a circle.</span>
+
+<span class="sd">    Assume that top of circle is 0 degrees.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cx, cy : int</span>
+<span class="sd">        Coordinates (x and y) of origin of circle. Defaults</span>
+<span class="sd">        to 0 for x and y.</span>
+<span class="sd">    r : int</span>
+<span class="sd">        Radius of circle, defaults to 1.</span>
+<span class="sd">    steps : int</span>
+<span class="sd">        Spacing between evenly spaced points on the</span>
+<span class="sd">        circle in degrees. Defaults to 9 (360 degrees</span>
+<span class="sd">        divided into 40 parts, i.e., 5 percent parts)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    coords : list of list</span>
+<span class="sd">        Nested list of points: ``[[x1, y1], [x2, y2], ...]``.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Make sure we are dealing with integer steps</span>
+    <span class="k">assert</span> <span class="n">steps</span> <span class="o">/</span> <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
+    <span class="n">steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+
+    <span class="n">coords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">cx</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">cy</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+
+    <span class="c1"># Exchange x and y so that 0 degree is top of circle</span>
+    <span class="c1"># also round off</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">round</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">5</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>  <span class="c1"># noqa</span>
+
+    <span class="k">return</span> <span class="n">coords</span>
+
+
+<span class="k">def</span> <span class="nf">_stereographic_projection</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the stereographic projection.</span>
+
+<span class="sd">    Given a unit sphere with radius ``r = 1`` and center at</span>
+<span class="sd">    The origin. Project the point ``p = (x, y, z)`` from the</span>
+<span class="sd">    sphere&#39;s South pole ``(0, 0, -1)`` onto a tangent plane</span>
+<span class="sd">    on the sphere&#39;s North pole ``(0, 0, 1)``. The resulting</span>
+<span class="sd">    point is ``p&#39; = (x&#39;, y&#39;)``.</span>
+
+<span class="sd">    ``x&#39;, y&#39; = (1 / (x + z)), (1 / (y + z))``</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x, y, z : float</span>
+<span class="sd">        Positions of electrodes on a unit sphere</span>
+<span class="sd">    scale : float</span>
+<span class="sd">        Determines the distance of the projection point</span>
+<span class="sd">        from the origin of the sphere in terms of the radius.</span>
+<span class="sd">        Defaults to 1.0, which is a point on the sphere.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x, y : float</span>
+<span class="sd">        Positions of electrodes as projected onto a unit circle.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">scale</span> <span class="o">+</span> <span class="n">z</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">mu</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="n">mu</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018-2021, Stefan Appelhoff.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

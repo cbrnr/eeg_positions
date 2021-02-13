@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eeg_positions.get_elec_coords &#8212; eeg_positions 1.1.0.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eeg_positions.get_available_elec_names" href="eeg_positions.get_available_elec_names.html" />
+    <link rel="prev" title="eeg_positions.find_point_at_fraction" href="eeg_positions.find_point_at_fraction.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">eeg_positions</a></h1>
+
+
+
+<p class="blurb">Compute and plot standard EEG electrode positions.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=sappelhoff&repo=eeg_positions&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.find_point_at_fraction.html">eeg_positions.find_point_at_fraction</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eeg_positions.get_elec_coords</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples-using-eeg-positions-get-elec-coords">Examples using <code class="docutils literal notranslate"><span class="pre">eeg_positions.get_elec_coords</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_available_elec_names.html">eeg_positions.get_available_elec_names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_alias_mapping.html">eeg_positions.get_alias_mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.plot_coords.html">eeg_positions.plot_coords</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API Documentation</a><ul>
+      <li>Previous: <a href="eeg_positions.find_point_at_fraction.html" title="previous chapter">eeg_positions.find_point_at_fraction</a></li>
+      <li>Next: <a href="eeg_positions.get_available_elec_names.html" title="next chapter">eeg_positions.get_available_elec_names</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="eeg-positions-get-elec-coords">
+<h1>eeg_positions.get_elec_coords<a class="headerlink" href="#eeg-positions-get-elec-coords" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="eeg_positions.get_elec_coords">
+<code class="sig-prename descclassname">eeg_positions.</code><code class="sig-name descname">get_elec_coords</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="o">=</span><span class="default_value">'1005'</span></em>, <em class="sig-param"><span class="n">elec_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">drop_landmarks</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">dim</span><span class="o">=</span><span class="default_value">'2d'</span></em>, <em class="sig-param"><span class="n">as_mne_montage</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">equator</span><span class="o">=</span><span class="default_value">'Nz-T10-Iz-T9'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eeg_positions/compute.html#get_elec_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eeg_positions.get_elec_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get standard EEG electrode coordinates.</p>
+<p>Compute standard EEG electrode coordinates on a spherical head model.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>system</strong><span class="classifier">“1020” | “1010” | “1005”</span></dt><dd><p>Specify the electrodes for which to return coordinates.
+<code class="docutils literal notranslate"><span class="pre">&quot;1020&quot;</span></code> returns all electrodes of the 10-20 system, and so on.
+For an overview of the systems, see <a class="reference internal" href="#r174912b3ec01-1" id="id1">[1]</a>.
+Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;1005&quot;</span></code>.
+A more specific selection of electrodes to return can be done with
+the <cite>elec_names</cite> parameter, including some electrodes that are not
+typically included in the <code class="docutils literal notranslate"><span class="pre">&quot;1005&quot;</span></code> system.
+If <cite>elec_names</cite> is defined, <cite>system</cite> is ignored.</p>
+</dd>
+<dt><strong>elec_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></span></dt><dd><p>List of electrode names to return coordinates of.
+All electrodes that are part of the <code class="docutils literal notranslate"><span class="pre">&quot;1005&quot;</span></code> system are available,
+and this includes by definition all electrodes of the
+<code class="docutils literal notranslate"><span class="pre">&quot;1010&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;1020&quot;</span></code> systems.
+Additionally, several extra electrodes are made available.
+Use <a class="reference internal" href="eeg_positions.get_available_elec_names.html#eeg_positions.get_available_elec_names" title="eeg_positions.get_available_elec_names"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_available_elec_names()</span></code></a> and
+<a class="reference internal" href="eeg_positions.get_alias_mapping.html#eeg_positions.get_alias_mapping" title="eeg_positions.get_alias_mapping"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_alias_mapping()</span></code></a> for more information.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, all electrode specified in <cite>system</cite> are returned.
+Defaults to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+<dt><strong>drop_landmarks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.9)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>If True, drop anatomical landmarks (NAS, LPA, RPA)
+from the coordinate data before returning <cite>coords</cite>. Dropping can be helpful,
+because in our model NAS, LPA, and RPA coincide with Nz, T9, and T10
+respectively.
+Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt><strong>dim</strong><span class="classifier">“2d” | “3d”</span></dt><dd><p>Return <cite>coords</cite> either in 2D (x, y) or 3D (x, y, z). If <code class="docutils literal notranslate"><span class="pre">&quot;2d&quot;</span></code> is
+selected, the coordinates are first computed as 3D, and then projected
+to 2D using a stereographic projection.
+Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;2d&quot;</span></code>.</p>
+</dd>
+<dt><strong>as_mne_montage</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.9)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>If True, return <cite>coords</cite> as an <code class="docutils literal notranslate"><span class="pre">mne.channels.DigMontage</span></code> object. In that
+case, the <cite>drop_landmarks</cite> and <cite>dim</cite> parameters are set to <code class="docutils literal notranslate"><span class="pre">False</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&quot;3d&quot;</span></code> respectively, ignoring the values that were actually passed.
+This is done because the anatomical landmarks are needed to “fit” the
+coordinates to the mne system, and because <code class="docutils literal notranslate"><span class="pre">mne.channels.DigMontage``objects</span>
+<span class="pre">always</span> <span class="pre">contain</span> <span class="pre">3D</span> <span class="pre">values.</span> <span class="pre">If</span> <span class="pre">``True</span></code>, a recent version of <code class="docutils literal notranslate"><span class="pre">mne</span></code> is required.
+Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>, returning <cite>coords</cite> as a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> object.</p>
+</dd>
+<dt><strong>equator_contour</strong><span class="classifier">“Nz-T10-Iz-T9” | “Fpz-T8-Oz-T7”</span></dt><dd><p>Control which contour line of electrodes should be at the equator of
+the sphere. Both permissible options (<code class="docutils literal notranslate"><span class="pre">&quot;Nz-T10-Iz-T9&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Fpz-T8-Oz-T7&quot;</span></code>)
+are reasonable assumptions.
+Selecting <code class="docutils literal notranslate"><span class="pre">&quot;Nz-T10-Iz-T9&quot;</span></code> is recommended, because the electrodes Nz, T9,
+and T10 correspond to the anatomical landmarks NAS, LPA, and RPA in
+our spherical head model (see Notes section).
+Thus, the anatomical landmarks lie on the equator,
+and all electrodes are drawn inside a circule head shape
+when projecting to 2D.
+The option to select <code class="docutils literal notranslate"><span class="pre">&quot;Fpz-T8-Oz-T7&quot;</span></code> is provided (but not recommended),
+because this contour line corresponds to where the head circumference
+would be measured for real humans. However, when selecting <code class="docutils literal notranslate"><span class="pre">&quot;Fpz-T8-Oz-T7&quot;</span></code>
+as the equator, several electrodes may be drawn outside a circular
+head shape when projecting to 2D.
+Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;Nz-T10-Iz-T9&quot;</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>coords</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.3.0.dev0+712.gfc9fdba65)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> | <a class="reference external" href="https://mne.tools/dev/generated/mne.channels.DigMontage.html#mne.channels.DigMontage" title="(in MNE v0.23.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mne.channels.DigMontage</span></code></a></span></dt><dd><p>The standard EEG electrode coordinates as computed on a sphere.
+Either returned as a pandas DataFrame object with the columns
+<code class="docutils literal notranslate"><span class="pre">&quot;label&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;y&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code>
+(only if <cite>dim</cite> is <code class="docutils literal notranslate"><span class="pre">&quot;3d&quot;</span></code>),
+or as an <code class="docutils literal notranslate"><span class="pre">mne.channels.DigMontage</span></code> object if <cite>as_mne_montage</cite>
+is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="eeg_positions.get_available_elec_names.html#eeg_positions.get_available_elec_names" title="eeg_positions.get_available_elec_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_elec_names</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="eeg_positions.get_alias_mapping.html#eeg_positions.get_alias_mapping" title="eeg_positions.get_alias_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_alias_mapping</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>We are modelling the coordinate system as if a subject’s head was
+a sphere.
+Coordinates are computes according to a “RAS” coordinate system
+(Right, Anterior, Superior). That is, from a subject’s perspective
+the x-axis points from the left to the right,
+the y-axis points to the front (anterior direction), and
+the z-axis points up (superior direction).
+For example a point on the subject’s left side will have a
+negative <code class="docutils literal notranslate"><span class="pre">x</span></code> coordinate value.</p>
+<p>The location of the origin of the sphere depends on the argument to
+the <cite>equator</cite> parameter.</p>
+<p>In the recommended case <code class="docutils literal notranslate"><span class="pre">&quot;Nz-T10-Iz-T9&quot;</span></code>,
+the coordinate system is based on anatomical landmarks:
+The left preauricular point (LPA), the right preauricular
+point (RPA), and the nasion (NAS).
+The x-axis goes from LPA through RPA, the y-axis goes orthogonally
+to the x-axis through NAS, and the z-axis goes orthogonally
+upwards from the xy-plane, going directly through the vertex
+of the sphere, coinciding with the <code class="docutils literal notranslate"><span class="pre">&quot;Cz&quot;</span></code> electrode position.
+In that case, the origin of the sphere lies somewhere between the ears,
+but not necessarily exactly in the middle.</p>
+<p>If the option is selected to put the equator on the <code class="docutils literal notranslate"><span class="pre">&quot;Fpz-T8-Oz-T7&quot;</span></code>
+contour, the anatomical landmarks end up <em>below</em> the equator, and
+the origin of the sphere lies somewhere between the <code class="docutils literal notranslate"><span class="pre">&quot;T7&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;T8&quot;</span></code>
+electrode positions.</p>
+<p>The units of the coordinate system are arbitrary, because all coordinates
+are computed on a unit sphere (that is, a sphere with radius 1).</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r174912b3ec01-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>R. Oostenveld and P. Praamstra. The five percent electrode system for
+high-resolution EEG and ERP measurements. Clin Neurophysiol, 112:713-719, 2001.
+<a class="reference external" href="https://doi.org/10.1016/S1388-2457(00)00527-7">https://doi.org/10.1016/S1388-2457(00)00527-7</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="examples-using-eeg-positions-get-elec-coords">
+<span id="sphx-glr-backreferences-eeg-positions-get-elec-coords"></span><h2>Examples using <code class="docutils literal notranslate"><span class="pre">eeg_positions.get_elec_coords</span></code><a class="headerlink" href="#examples-using-eeg-positions-get-elec-coords" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Get specific electrodes and use aliases"><div class="figure align-default" id="id3">
+<img alt="Get specific electrodes and use aliases" src="../_images/sphx_glr_use_elec_names_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/use_elec_names.html#sphx-glr-auto-examples-use-elec-names-py"><span class="std std-ref">Get specific electrodes and use aliases</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Plot electrode positions"><div class="figure align-default" id="id4">
+<img alt="Plot electrode positions" src="../_images/sphx_glr_plot_positions_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_positions.html#sphx-glr-auto-examples-plot-positions-py"><span class="std std-ref">Plot electrode positions</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="For more information, check out these MNE resources:"><div class="figure align-default" id="id5">
+<img alt="Use ``eeg_positions`` with MNE-Python" src="../_images/sphx_glr_use_mne_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/use_mne.html#sphx-glr-auto-examples-use-mne-py"><span class="std std-ref">Use eeg_positions with MNE-Python</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-clear"></div></div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018-2021, Stefan Appelhoff.
+      
+      |
+      <a href="../_sources/generated/eeg_positions.get_elec_coords.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

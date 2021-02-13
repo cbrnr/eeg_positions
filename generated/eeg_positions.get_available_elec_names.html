@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eeg_positions.get_available_elec_names &#8212; eeg_positions 1.1.0.dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="eeg_positions.get_alias_mapping" href="eeg_positions.get_alias_mapping.html" />
+    <link rel="prev" title="eeg_positions.get_elec_coords" href="eeg_positions.get_elec_coords.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">eeg_positions</a></h1>
+
+
+
+<p class="blurb">Compute and plot standard EEG electrode positions.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=sappelhoff&repo=eeg_positions&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.find_point_at_fraction.html">eeg_positions.find_point_at_fraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_elec_coords.html">eeg_positions.get_elec_coords</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eeg_positions.get_available_elec_names</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples-using-eeg-positions-get-available-elec-names">Examples using <code class="docutils literal notranslate"><span class="pre">eeg_positions.get_available_elec_names</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.get_alias_mapping.html">eeg_positions.get_alias_mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeg_positions.plot_coords.html">eeg_positions.plot_coords</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../api.html">API Documentation</a><ul>
+      <li>Previous: <a href="eeg_positions.get_elec_coords.html" title="previous chapter">eeg_positions.get_elec_coords</a></li>
+      <li>Next: <a href="eeg_positions.get_alias_mapping.html" title="next chapter">eeg_positions.get_alias_mapping</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="eeg-positions-get-available-elec-names">
+<h1>eeg_positions.get_available_elec_names<a class="headerlink" href="#eeg-positions-get-available-elec-names" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="eeg_positions.get_available_elec_names">
+<code class="sig-prename descclassname">eeg_positions.</code><code class="sig-name descname">get_available_elec_names</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="o">=</span><span class="default_value">'all'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eeg_positions/compute.html#get_available_elec_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#eeg_positions.get_available_elec_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of electrode names for which positions are available.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>system</strong><span class="classifier">“1020” | “1010” | “1005” | “landmarks” | “all”</span></dt><dd><p>Specify for which system to return the electrode names.
+If <code class="docutils literal notranslate"><span class="pre">&quot;landmarks&quot;</span></code>, return the anatomical landmark names.
+If <code class="docutils literal notranslate"><span class="pre">&quot;all&quot;</span></code>, return all electrode names for which positions
+are available. Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;all&quot;</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>elec_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The electrode names for which positions are available.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="eeg_positions.get_alias_mapping.html#eeg_positions.get_alias_mapping" title="eeg_positions.get_alias_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_alias_mapping</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="eeg_positions.get_elec_coords.html#eeg_positions.get_elec_coords" title="eeg_positions.get_elec_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_elec_coords</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">elec_names</span> <span class="o">=</span> <span class="n">get_available_elec_names</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;FakeName&quot;</span> <span class="ow">in</span> <span class="n">elec_names</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;Cz&quot;</span> <span class="ow">in</span> <span class="n">elec_names</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">elec_names</span> <span class="o">=</span> <span class="n">get_available_elec_names</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="s2">&quot;landmarks&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">elec_names</span><span class="p">)</span>
+<span class="go">[&#39;LPA&#39;, &#39;RPA&#39;, &#39;NAS&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="section" id="examples-using-eeg-positions-get-available-elec-names">
+<span id="sphx-glr-backreferences-eeg-positions-get-available-elec-names"></span><h2>Examples using <code class="docutils literal notranslate"><span class="pre">eeg_positions.get_available_elec_names</span></code><a class="headerlink" href="#examples-using-eeg-positions-get-available-elec-names" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Get specific electrodes and use aliases"><div class="figure align-default" id="id1">
+<img alt="Get specific electrodes and use aliases" src="../_images/sphx_glr_use_elec_names_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/use_elec_names.html#sphx-glr-auto-examples-use-elec-names-py"><span class="std std-ref">Get specific electrodes and use aliases</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="sphx-glr-clear"></div></div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018-2021, Stefan Appelhoff.
+      
+      |
+      <a href="../_sources/generated/eeg_positions.get_available_elec_names.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

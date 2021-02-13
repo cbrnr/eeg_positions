@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Documentation &#8212; eeg_positions 1.1.0.dev0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="eeg_positions.find_point_at_fraction" href="generated/eeg_positions.find_point_at_fraction.html" />
+    <link rel="prev" title="Compute and plot standard EEG electrode positions" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">eeg_positions</a></h1>
+
+
+
+<p class="blurb">Compute and plot standard EEG electrode positions.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=sappelhoff&repo=eeg_positions&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/eeg_positions.find_point_at_fraction.html">eeg_positions.find_point_at_fraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/eeg_positions.get_elec_coords.html">eeg_positions.get_elec_coords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/eeg_positions.get_available_elec_names.html">eeg_positions.get_available_elec_names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/eeg_positions.get_alias_mapping.html">eeg_positions.get_alias_mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/eeg_positions.plot_coords.html">eeg_positions.plot_coords</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Compute and plot standard EEG electrode positions</a></li>
+      <li>Next: <a href="generated/eeg_positions.find_point_at_fraction.html" title="next chapter">eeg_positions.find_point_at_fraction</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="api-documentation">
+<span id="docs-api"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<p>All functions described here can be imported from the <a class="reference internal" href="#module-eeg_positions" title="eeg_positions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eeg_positions</span></code></a> package.</p>
+<span class="target" id="module-eeg_positions"></span><p>Compute and plot standard EEG electrode positions.</p>
+<p>The <a class="reference internal" href="generated/eeg_positions.find_point_at_fraction.html#eeg_positions.find_point_at_fraction" title="eeg_positions.find_point_at_fraction"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_point_at_fraction()</span></code></a> function contains the key algorithm for computing the
+standard EEG electode positions on a sphere.
+You will most likely not need to use this function in your code directly,
+but it is still made availble over the API and the documentation for its key role in the code.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eeg_positions.find_point_at_fraction.html#eeg_positions.find_point_at_fraction" title="eeg_positions.find_point_at_fraction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_point_at_fraction</span></code></a>(p1, p2, p3, frac)</p></td>
+<td><p>Find a point on an arc spanned by three points.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The practically most useful functions are listed below.
+These will help you to get the electrode positions you need in a usable format</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eeg_positions.get_elec_coords.html#eeg_positions.get_elec_coords" title="eeg_positions.get_elec_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_elec_coords</span></code></a>([system, elec_names, …])</p></td>
+<td><p>Get standard EEG electrode coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/eeg_positions.get_available_elec_names.html#eeg_positions.get_available_elec_names" title="eeg_positions.get_available_elec_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_available_elec_names</span></code></a>([system])</p></td>
+<td><p>Get a list of electrode names for which positions are available.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eeg_positions.get_alias_mapping.html#eeg_positions.get_alias_mapping" title="eeg_positions.get_alias_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_alias_mapping</span></code></a>()</p></td>
+<td><p>Get a mapping from electrode names to their aliases.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Finally, the <a class="reference internal" href="#module-eeg_positions" title="eeg_positions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eeg_positions</span></code></a> package also exposes a convenient function for
+visualizing electrode positons.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/eeg_positions.plot_coords.html#eeg_positions.plot_coords" title="eeg_positions.plot_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_coords</span></code></a>(coords[, scatter_kwargs, …])</p></td>
+<td><p>Plot standard EEG electrode coordinates.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018-2021, Stefan Appelhoff.
+      
+      |
+      <a href="_sources/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

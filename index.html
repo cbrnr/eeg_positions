@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compute and plot standard EEG electrode positions &#8212; eeg_positions 1.1.0.dev0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Documentation" href="api.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">eeg_positions</a></h1>
+
+
+
+<p class="blurb">Compute and plot standard EEG electrode positions.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=sappelhoff&repo=eeg_positions&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="api.html" title="next chapter">API Documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="compute-and-plot-standard-eeg-electrode-positions">
+<h1>Compute and plot standard EEG electrode positions<a class="headerlink" href="#compute-and-plot-standard-eeg-electrode-positions" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="highlights">
+<h2>Highlights<a class="headerlink" href="#highlights" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Compute and plot standard EEG electrode positions using Python</strong></dt><dd><ul>
+<li><p>Just <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">eeg_positions</span></code></p></li>
+<li><p>Then take a look at the <a class="reference internal" href="auto_examples/index.html#docs-examples"><span class="std std-ref">examples</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Get pre-computed electrode positions from the repository /data directory</strong></dt><dd><ul>
+<li><p>See in <a class="reference external" href="https://github.com/sappelhoff/eeg_positions/tree/master/data">GitHub</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Look through the well-commented and documented code base to understand what’s going on</strong></dt><dd><ul>
+<li><p>Start here: <a class="reference internal" href="api.html#docs-api"><span class="std std-ref">API documentation</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>When recording electroencephalography (EEG) data, electrodes are usually placed according to an international standard.
+The <code class="docutils literal notranslate"><span class="pre">10-20</span></code>, and by extension the <code class="docutils literal notranslate"><span class="pre">10-10</span></code> and <code class="docutils literal notranslate"><span class="pre">10-05</span></code> systems are established sets of rules for this case
+<a class="footnote-reference brackets" href="#article" id="id1">1</a>.</p>
+<p>Even when the actual electrode locations have not been empirically measured during the recording,
+an approximation  of these positions is important for for plotting topographies or visualizing locations of sensors
+with the help of analysis software.</p>
+<p>While standard locations are available in many places such as from Robert Oostenveld’s blog
+<a class="footnote-reference brackets" href="#blog" id="id2">2</a>
+or directly from electrode cap manufacturers such as
+<a class="reference external" href="https://www.easycap.de/">Easycap</a>,
+it is seldom specified and documented how these electrode locations are calculated.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">eeg_positions</span></code> repository contains code to compute the standard EEG electrode locations
+on a spherical head model for the <code class="docutils literal notranslate"><span class="pre">10-20</span></code>, <code class="docutils literal notranslate"><span class="pre">10-10</span></code>, and <code class="docutils literal notranslate"><span class="pre">10-05</span></code> system.</p>
+<p>There are also utility functions to project the 3D locations to 2D space and to plot them.</p>
+</div>
+<div class="section" id="details">
+<h2>Details<a class="headerlink" href="#details" title="Permalink to this headline">¶</a></h2>
+<p>We compute the EEG electrode positions on a spherical head model.</p>
+<p>EEG electrodes are typically placed on a human’s scalp,
+so the coordinate system we use for the EEG electrode positions is also described with
+reference to humans.</p>
+<p>We are working in a 3D coordinate system with a <em>“RAS”</em> orientation.
+That means that <em>from the perspective of the human that has the electrodes on their scalp</em>,
+the x-axis is pointing to the right hand side (<strong>R</strong>),
+the y-axis is pointing to the front (that is, <em>“anterior”</em>, <strong>A</strong>), and
+the z-axis is pointing upwards (that is, <em>“superior”</em>, <strong>S</strong>).</p>
+<p>For more information on this, see the documentation in the
+<a class="reference external" href="https://bids-specification.readthedocs.io/en/latest/99-appendices/08-coordinate-systems.html">BIDS specification</a>.</p>
+<p>The points in space used to properly define the coordinate system are anatomical landmarks:</p>
+<ul class="simple">
+<li><p>The nasion (NAS)</p></li>
+<li><p>The left preauricular point (LPA)</p></li>
+<li><p>The right preauricular point (RPA)</p></li>
+<li><p>The vertex</p></li>
+<li><p>The inion</p></li>
+</ul>
+<p>For more information on this, see the MNE-Python glossary under
+<a class="reference external" href="https://mne.tools/dev/glossary.html#term-fiducial-point">fiducial points</a>.</p>
+<p>In our spherical head model, the anatomical landmarks correspond to the
+following positions (<code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>) on the unit sphere:</p>
+<ul class="simple">
+<li><p>NAS = <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">0)</span></code></p></li>
+<li><p>LPA = <code class="docutils literal notranslate"><span class="pre">(-1,</span> <span class="pre">0,</span> <span class="pre">0)</span></code></p></li>
+<li><p>RPA = <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">0,</span> <span class="pre">0)</span></code></p></li>
+<li><p>Vertex = <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></code></p></li>
+<li><p>Inion = <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">-1,</span> <span class="pre">0)</span></code></p></li>
+</ul>
+<p>(Note that <code class="docutils literal notranslate"><span class="pre">eeg_positions</span></code> also allows for some customization in this regard,
+as shown in the <a class="reference internal" href="auto_examples/index.html#docs-examples"><span class="std std-ref">examples</span></a>.)</p>
+<p>Based on these known points, and the known distribution of EEG electrodes in the
+<code class="docutils literal notranslate"><span class="pre">10-20</span></code>, <code class="docutils literal notranslate"><span class="pre">10-10</span></code>, and <code class="docutils literal notranslate"><span class="pre">10-05</span></code> systems,
+we then use the function <a class="reference internal" href="generated/eeg_positions.find_point_at_fraction.html#eeg_positions.find_point_at_fraction" title="eeg_positions.find_point_at_fraction"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_point_at_fraction()</span></code></a>,
+to calculate the remaining points.</p>
+</div>
+<div class="section" id="cite">
+<h2>Cite<a class="headerlink" href="#cite" title="Permalink to this headline">¶</a></h2>
+<p>If you find this repository useful and want to cite it in your work,
+please go to the
+<a class="reference external" href="https://doi.org/10.5281/zenodo.3718568">Zenodo record</a>
+and obtain the appropriate citation from the <em>“Cite as”</em> section there.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>My thanks to:</p>
+<ul class="simple">
+<li><p>Robert Oostenveld for writing his blog post on EEG electrode positions</p></li>
+<li><p>Ed Williams for the helpful correspondence and discussions about
+“intermediate points on a great circle” (see also <a class="footnote-reference brackets" href="#edwilliams" id="id3">3</a>)</p></li>
+<li><p>“Nominal Animal” who helped me to figure out the math for
+the <code class="docutils literal notranslate"><span class="pre">find_point_at_fraction</span></code> function <a class="footnote-reference brackets" href="#stackexchange-nominal" id="id4">4</a></p></li>
+</ul>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p><dl class="footnote brackets">
+<dt class="label" id="article"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Robert Oostenveld and Peter Praamstra. The five percent electrode system for high-resolution eeg and erp measurements. <em>Clinical Neurophysiology</em>, 112(4):713–719, 2001. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1388245700005277">https://www.sciencedirect.com/science/article/pii/S1388245700005277</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/S1388-2457(00)00527-7">doi:https://doi.org/10.1016/S1388-2457(00)00527-7</a>.</p>
+</dd>
+<dt class="label" id="blog"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>January 2006. URL: <a class="reference external" href="http://robertoostenveld.nl/electrode/">http://robertoostenveld.nl/electrode/</a>.</p>
+</dd>
+<dt class="label" id="edwilliams"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p>URL: <a class="reference external" href="http://www.edwilliams.org/avform.htm">http://www.edwilliams.org/avform.htm</a>.</p>
+</dd>
+<dt class="label" id="stackexchange-nominal"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
+<dd><p>nominal animal (https://math.stackexchange.com/users/318422/nominal-animal). Find intermediate points on small circle of a sphere. mathematics stack exchange. URL: <a class="reference external" href="https://math.stackexchange.com/q/2805204">https://math.stackexchange.com/q/2805204</a>.</p>
+</dd>
+</dl>
+</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018-2021, Stefan Appelhoff.
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

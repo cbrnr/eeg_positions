@@ -1,0 +1,689 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eeg_positions.compute &#8212; eeg_positions 1.1.0.dev0 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">eeg_positions</a></h1>
+
+
+
+<p class="blurb">Compute and plot standard EEG electrode positions.</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=sappelhoff&repo=eeg_positions&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for eeg_positions.compute</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Calculate standard EEG electrode positions on a sphere.&quot;&quot;&quot;</span>
+<span class="c1"># Copyright (c) 2018-2021, Stefan Appelhoff</span>
+<span class="c1"># BSD-3-Clause</span>
+
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">distutils.version</span> <span class="kn">import</span> <span class="n">LooseVersion</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">eeg_positions.config</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ACCEPTED_EQUATORS</span><span class="p">,</span>
+    <span class="n">LANDMARKS</span><span class="p">,</span>
+    <span class="n">MNE_REQUIREMENT</span><span class="p">,</span>
+    <span class="n">SYSTEM1005</span><span class="p">,</span>
+    <span class="n">SYSTEM1010</span><span class="p">,</span>
+    <span class="n">SYSTEM1020</span><span class="p">,</span>
+    <span class="n">CONTOUR_ORDER_Fpz_EQUATOR</span><span class="p">,</span>
+    <span class="n">CONTOUR_ORDER_Nz_EQUATOR</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">eeg_positions.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_add_points_along_contour</span><span class="p">,</span>
+    <span class="n">_append_ps_to_df</span><span class="p">,</span>
+    <span class="n">_stereographic_projection</span><span class="p">,</span>
+    <span class="n">find_point_at_fraction</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_alias_mapping"><a class="viewcode-back" href="../../generated/eeg_positions.get_alias_mapping.html#eeg_positions.get_alias_mapping">[docs]</a><span class="k">def</span> <span class="nf">get_alias_mapping</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get a mapping from electrode names to their aliases.</span>
+
+<span class="sd">    Some electrode positions have multiple names (aliases), depending</span>
+<span class="sd">    on the convention that was used to name them.</span>
+<span class="sd">    With this function, electrodes that are typically not part of the</span>
+<span class="sd">    10-20, 10-10, or 10-05 namespace are mapped to their alias within</span>
+<span class="sd">    these systems.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    alias_mapping : dict</span>
+<span class="sd">        A dictionary mapping electrode names to a list of alias</span>
+<span class="sd">        names. The keys are electrode names that are *not* in the</span>
+<span class="sd">        10-05 namespace, but they map to values that *are* in that</span>
+<span class="sd">        namespace. However, see also &quot;Notes&quot; below.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Some electrodes do not have a direct alias but an approximately</span>
+<span class="sd">    corresponding position. For example &quot;A1&quot; corresponds to the</span>
+<span class="sd">    &quot;LPA&quot; position with some (x, y, z) offset in the coordinate</span>
+<span class="sd">    system. These positions are returned with a mapping like:</span>
+<span class="sd">    ``{&quot;name&quot;: &quot;alias+(x, y, z)&quot;}``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; alias_mapping = get_alias_mapping()</span>
+<span class="sd">    &gt;&gt;&gt; alias_mapping[&quot;M1&quot;]</span>
+<span class="sd">    &#39;TP9&#39;</span>
+<span class="sd">    &gt;&gt;&gt; alias_mapping[&quot;A1&quot;]</span>
+<span class="sd">    &#39;LPA+(-0.1, -0.01, -0.01)&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alias_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">A1</span><span class="o">=</span><span class="s2">&quot;LPA+(-0.1, -0.01, -0.01)&quot;</span><span class="p">,</span>
+        <span class="n">A2</span><span class="o">=</span><span class="s2">&quot;RPA+(0.1, -0.01, -0.01)&quot;</span><span class="p">,</span>
+        <span class="n">M1</span><span class="o">=</span><span class="s2">&quot;TP9&quot;</span><span class="p">,</span>
+        <span class="n">M2</span><span class="o">=</span><span class="s2">&quot;TP10&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># sanity checks</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">alias_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># a value must not be a key</span>
+        <span class="k">assert</span> <span class="n">val</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alias_mapping</span>
+
+        <span class="c1"># a key must not be in the 10-05 namespace + landmarks</span>
+        <span class="k">assert</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">SYSTEM1005</span> <span class="o">+</span> <span class="n">LANDMARKS</span><span class="p">)</span>
+
+        <span class="c1"># a key must not contain certain characters</span>
+        <span class="c1"># so that the names do not collide with the alias+(x, y, z) syntax</span>
+        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="s2">&quot;+&quot;</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">char</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span>
+
+        <span class="c1"># a value must be in the 10-05 namespace + landmarks</span>
+        <span class="c1"># or be based on such a position, if it is modified via &quot;+(...)&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;+(&quot;</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+            <span class="c1"># this will raise a ValueError if more than one &quot;+&quot; is in the str,</span>
+            <span class="c1"># ... so do not define the tuple as something like (+1, -1, +0.3)</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">mod</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+            <span class="c1"># the modifier must be a tuple of 3 ints/floats</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">mod</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">mod</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">mod</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="n">SYSTEM1005</span> <span class="o">+</span> <span class="n">LANDMARKS</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">alias_mapping</span></div>
+
+
+<div class="viewcode-block" id="get_available_elec_names"><a class="viewcode-back" href="../../generated/eeg_positions.get_available_elec_names.html#eeg_positions.get_available_elec_names">[docs]</a><span class="k">def</span> <span class="nf">get_available_elec_names</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of electrode names for which positions are available.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    system : &quot;1020&quot; | &quot;1010&quot; | &quot;1005&quot; | &quot;landmarks&quot; | &quot;all&quot;</span>
+<span class="sd">        Specify for which system to return the electrode names.</span>
+<span class="sd">        If ``&quot;landmarks&quot;``, return the anatomical landmark names.</span>
+<span class="sd">        If ``&quot;all&quot;``, return all electrode names for which positions</span>
+<span class="sd">        are available. Defaults to ``&quot;all&quot;``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    elec_names : list of str</span>
+<span class="sd">        The electrode names for which positions are available.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    get_alias_mapping</span>
+<span class="sd">    get_elec_coords</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; elec_names = get_available_elec_names()</span>
+<span class="sd">    &gt;&gt;&gt; &quot;FakeName&quot; in elec_names</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; &quot;Cz&quot; in elec_names</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; elec_names = get_available_elec_names(system=&quot;landmarks&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; print(elec_names)</span>
+<span class="sd">    [&#39;LPA&#39;, &#39;RPA&#39;, &#39;NAS&#39;]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">elec_names</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;1020&quot;</span><span class="p">:</span> <span class="n">SYSTEM1020</span><span class="p">,</span>
+        <span class="s2">&quot;1010&quot;</span><span class="p">:</span> <span class="n">SYSTEM1010</span><span class="p">,</span>
+        <span class="s2">&quot;1005&quot;</span><span class="p">:</span> <span class="n">SYSTEM1005</span><span class="p">,</span>
+        <span class="s2">&quot;landmarks&quot;</span><span class="p">:</span> <span class="n">LANDMARKS</span><span class="p">,</span>
+        <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">SYSTEM1005</span> <span class="o">+</span> <span class="n">LANDMARKS</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_alias_mapping</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
+    <span class="p">}</span>
+    <span class="n">elec_names</span> <span class="o">=</span> <span class="n">elec_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">elec_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown input for `system`: </span><span class="si">{</span><span class="n">system</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">elec_names</span></div>
+
+
+<div class="viewcode-block" id="get_elec_coords"><a class="viewcode-back" href="../../generated/eeg_positions.get_elec_coords.html#eeg_positions.get_elec_coords">[docs]</a><span class="k">def</span> <span class="nf">get_elec_coords</span><span class="p">(</span>
+    <span class="n">system</span><span class="o">=</span><span class="s2">&quot;1005&quot;</span><span class="p">,</span>
+    <span class="n">elec_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">drop_landmarks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">dim</span><span class="o">=</span><span class="s2">&quot;2d&quot;</span><span class="p">,</span>
+    <span class="n">as_mne_montage</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">equator</span><span class="o">=</span><span class="s2">&quot;Nz-T10-Iz-T9&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get standard EEG electrode coordinates.</span>
+
+<span class="sd">    Compute standard EEG electrode coordinates on a spherical head model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    system : &quot;1020&quot; | &quot;1010&quot; | &quot;1005&quot;</span>
+<span class="sd">        Specify the electrodes for which to return coordinates.</span>
+<span class="sd">        ``&quot;1020&quot;`` returns all electrodes of the 10-20 system, and so on.</span>
+<span class="sd">        For an overview of the systems, see [1]_.</span>
+<span class="sd">        Defaults to ``&quot;1005&quot;``.</span>
+<span class="sd">        A more specific selection of electrodes to return can be done with</span>
+<span class="sd">        the `elec_names` parameter, including some electrodes that are not</span>
+<span class="sd">        typically included in the ``&quot;1005&quot;`` system.</span>
+<span class="sd">        If `elec_names` is defined, `system` is ignored.</span>
+<span class="sd">    elec_names : list of str | None</span>
+<span class="sd">        List of electrode names to return coordinates of.</span>
+<span class="sd">        All electrodes that are part of the ``&quot;1005&quot;`` system are available,</span>
+<span class="sd">        and this includes by definition all electrodes of the</span>
+<span class="sd">        ``&quot;1010&quot;`` and ``&quot;1020&quot;`` systems.</span>
+<span class="sd">        Additionally, several extra electrodes are made available.</span>
+<span class="sd">        Use :func:`get_available_elec_names` and</span>
+<span class="sd">        :func:`get_alias_mapping` for more information.</span>
+<span class="sd">        If ``None``, all electrode specified in `system` are returned.</span>
+<span class="sd">        Defaults to ``None``.</span>
+<span class="sd">    drop_landmarks : bool</span>
+<span class="sd">        If True, drop anatomical landmarks (NAS, LPA, RPA)</span>
+<span class="sd">        from the coordinate data before returning `coords`. Dropping can be helpful,</span>
+<span class="sd">        because in our model NAS, LPA, and RPA coincide with Nz, T9, and T10</span>
+<span class="sd">        respectively.</span>
+<span class="sd">        Defaults to ``True``.</span>
+<span class="sd">    dim : &quot;2d&quot; | &quot;3d&quot;</span>
+<span class="sd">        Return `coords` either in 2D (x, y) or 3D (x, y, z). If ``&quot;2d&quot;`` is</span>
+<span class="sd">        selected, the coordinates are first computed as 3D, and then projected</span>
+<span class="sd">        to 2D using a stereographic projection.</span>
+<span class="sd">        Defaults to ``&quot;2d&quot;``.</span>
+<span class="sd">    as_mne_montage : bool</span>
+<span class="sd">        If True, return `coords` as an ``mne.channels.DigMontage`` object. In that</span>
+<span class="sd">        case, the `drop_landmarks` and `dim` parameters are set to ``False`` and</span>
+<span class="sd">        ``&quot;3d&quot;`` respectively, ignoring the values that were actually passed.</span>
+<span class="sd">        This is done because the anatomical landmarks are needed to &quot;fit&quot; the</span>
+<span class="sd">        coordinates to the mne system, and because ``mne.channels.DigMontage``objects</span>
+<span class="sd">        always contain 3D values. If ``True``, a recent version of ``mne`` is required.</span>
+<span class="sd">        Defaults to ``False``, returning `coords` as a ``pandas.DataFrame`` object.</span>
+<span class="sd">    equator_contour : &quot;Nz-T10-Iz-T9&quot; | &quot;Fpz-T8-Oz-T7&quot;</span>
+<span class="sd">        Control which contour line of electrodes should be at the equator of</span>
+<span class="sd">        the sphere. Both permissible options (``&quot;Nz-T10-Iz-T9&quot;`` or ``&quot;Fpz-T8-Oz-T7&quot;``)</span>
+<span class="sd">        are reasonable assumptions.</span>
+<span class="sd">        Selecting ``&quot;Nz-T10-Iz-T9&quot;`` is recommended, because the electrodes Nz, T9,</span>
+<span class="sd">        and T10 correspond to the anatomical landmarks NAS, LPA, and RPA in</span>
+<span class="sd">        our spherical head model (see Notes section).</span>
+<span class="sd">        Thus, the anatomical landmarks lie on the equator,</span>
+<span class="sd">        and all electrodes are drawn inside a circule head shape</span>
+<span class="sd">        when projecting to 2D.</span>
+<span class="sd">        The option to select ``&quot;Fpz-T8-Oz-T7&quot;`` is provided (but not recommended),</span>
+<span class="sd">        because this contour line corresponds to where the head circumference</span>
+<span class="sd">        would be measured for real humans. However, when selecting ``&quot;Fpz-T8-Oz-T7&quot;``</span>
+<span class="sd">        as the equator, several electrodes may be drawn outside a circular</span>
+<span class="sd">        head shape when projecting to 2D.</span>
+<span class="sd">        Defaults to ``&quot;Nz-T10-Iz-T9&quot;``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    coords : pandas.DataFrame | mne.channels.DigMontage</span>
+<span class="sd">        The standard EEG electrode coordinates as computed on a sphere.</span>
+<span class="sd">        Either returned as a pandas DataFrame object with the columns</span>
+<span class="sd">        ``&quot;label&quot;``, ``&quot;x&quot;``, ``&quot;y&quot;``, and ``&quot;z&quot;``</span>
+<span class="sd">        (only if `dim` is ``&quot;3d&quot;``),</span>
+<span class="sd">        or as an ``mne.channels.DigMontage`` object if `as_mne_montage`</span>
+<span class="sd">        is ``True``.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    get_available_elec_names</span>
+<span class="sd">    get_alias_mapping</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    We are modelling the coordinate system as if a subject&#39;s head was</span>
+<span class="sd">    a sphere.</span>
+<span class="sd">    Coordinates are computes according to a &quot;RAS&quot; coordinate system</span>
+<span class="sd">    (Right, Anterior, Superior). That is, from a subject&#39;s perspective</span>
+<span class="sd">    the x-axis points from the left to the right,</span>
+<span class="sd">    the y-axis points to the front (anterior direction), and</span>
+<span class="sd">    the z-axis points up (superior direction).</span>
+<span class="sd">    For example a point on the subject&#39;s left side will have a</span>
+<span class="sd">    negative ``x`` coordinate value.</span>
+
+<span class="sd">    The location of the origin of the sphere depends on the argument to</span>
+<span class="sd">    the `equator` parameter.</span>
+
+<span class="sd">    In the recommended case ``&quot;Nz-T10-Iz-T9&quot;``,</span>
+<span class="sd">    the coordinate system is based on anatomical landmarks:</span>
+<span class="sd">    The left preauricular point (LPA), the right preauricular</span>
+<span class="sd">    point (RPA), and the nasion (NAS).</span>
+<span class="sd">    The x-axis goes from LPA through RPA, the y-axis goes orthogonally</span>
+<span class="sd">    to the x-axis through NAS, and the z-axis goes orthogonally</span>
+<span class="sd">    upwards from the xy-plane, going directly through the vertex</span>
+<span class="sd">    of the sphere, coinciding with the ``&quot;Cz&quot;`` electrode position.</span>
+<span class="sd">    In that case, the origin of the sphere lies somewhere between the ears,</span>
+<span class="sd">    but not necessarily exactly in the middle.</span>
+
+<span class="sd">    If the option is selected to put the equator on the ``&quot;Fpz-T8-Oz-T7&quot;``</span>
+<span class="sd">    contour, the anatomical landmarks end up *below* the equator, and</span>
+<span class="sd">    the origin of the sphere lies somewhere between the ``&quot;T7&quot;`` and ``&quot;T8&quot;``</span>
+<span class="sd">    electrode positions.</span>
+
+<span class="sd">    The units of the coordinate system are arbitrary, because all coordinates</span>
+<span class="sd">    are computed on a unit sphere (that is, a sphere with radius 1).</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] R. Oostenveld and P. Praamstra. The five percent electrode system for</span>
+<span class="sd">       high-resolution EEG and ERP measurements. Clin Neurophysiol, 112:713-719, 2001.</span>
+<span class="sd">       https://doi.org/10.1016/S1388-2457(00)00527-7</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># perform input checks</span>
+    <span class="c1"># --------------------</span>
+    <span class="k">if</span> <span class="n">equator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ACCEPTED_EQUATORS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`equator` must be one of </span><span class="si">{</span><span class="n">ACCEPTED_EQUATORS</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="n">systems</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;1020&quot;</span><span class="p">:</span> <span class="n">SYSTEM1020</span><span class="p">,</span> <span class="s2">&quot;1010&quot;</span><span class="p">:</span> <span class="n">SYSTEM1010</span><span class="p">,</span> <span class="s2">&quot;1005&quot;</span><span class="p">:</span> <span class="n">SYSTEM1005</span><span class="p">}</span>
+    <span class="n">system</span> <span class="o">=</span> <span class="n">systems</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">system</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`system` must be one of </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">systems</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">elec_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">elec_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elec_names</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`elec_names` must be a list of str or None.&quot;</span><span class="p">)</span>
+
+    <span class="n">available_elec_names</span> <span class="o">=</span> <span class="n">get_available_elec_names</span><span class="p">()</span>
+    <span class="n">bad_elec_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">elec_names</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">available_elec_names</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bad_elec_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;For some `elec_names` there are no available positions: </span><span class="si">{</span><span class="n">bad_elec_names</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Did you check for proper capitalization?&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">See also the `get_available_elec_names` function.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2d&quot;</span><span class="p">,</span> <span class="s2">&quot;3d&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dims</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`dim` must be one of </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">as_mne_montage</span><span class="p">,</span> <span class="n">drop_landmarks</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;as_mne_montage&quot;</span><span class="p">,</span> <span class="s2">&quot;drop_landmarks&quot;</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">` must be a boolean value, but found: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># handle aliases</span>
+    <span class="c1"># --------------</span>
+    <span class="c1"># get dict of aliases</span>
+    <span class="n">alias_mapping</span> <span class="o">=</span> <span class="n">get_alias_mapping</span><span class="p">()</span>
+
+    <span class="c1"># aliases that are in &quot;alias+(x, y, z)&quot; syntax are handled last (special treatment)</span>
+    <span class="n">elec_names_special</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># for position computation we rename all electrodes to the 10-05 namespace,</span>
+    <span class="c1"># then before returning, we use the `elec_names_replaced` dict to map the</span>
+    <span class="c1"># names back to what the users wants</span>
+    <span class="n">elec_names_replaced</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">elec_names_replaced_special</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">elec_names</span><span class="p">:</span>
+
+        <span class="c1"># skip all elec_names that are not aliases: These are fine as they are</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alias_mapping</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># check that one position is not specified twice</span>
+        <span class="n">alias</span> <span class="o">=</span> <span class="n">alias_mapping</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">elec_names</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;You specified the same electrode position using two aliases: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">alias</span><span class="si">}</span><span class="s2">. Remove one of them from `elec_names`.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># replace the elec_name with its alias</span>
+        <span class="k">if</span> <span class="s2">&quot;+(&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alias</span><span class="p">:</span>
+            <span class="c1"># for simple cases we know that an alias is in the 10-05 namespace</span>
+            <span class="n">elec_names</span><span class="p">[</span><span class="n">elec_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">alias</span>
+            <span class="n">elec_names_replaced</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># however, some cases are specified using an &quot;alias+(x, y, z)&quot; format</span>
+            <span class="c1"># we compute these electrode as the last positions (special treatment)</span>
+            <span class="k">assert</span> <span class="s2">&quot;+(&quot;</span> <span class="ow">in</span> <span class="n">alias</span>
+            <span class="n">elec_names_special</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alias</span><span class="p">)</span>
+            <span class="n">alias_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">alias</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+            <span class="n">elec_names_replaced_special</span><span class="p">[</span><span class="n">alias_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="c1"># calculate positions</span>
+    <span class="c1"># -------------------</span>
+    <span class="c1"># known locations</span>
+    <span class="n">front</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">back</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">equator</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Cz&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">front</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">right</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">back</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">left</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">top</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">front</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">right</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">back</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">left</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">top</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+        <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">front</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">right</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">back</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">left</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">top</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+    <span class="p">}</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="c1"># check the order of contours to draw based on known locations</span>
+    <span class="k">if</span> <span class="n">equator</span> <span class="o">==</span> <span class="s2">&quot;Nz-T10-Iz-T9&quot;</span><span class="p">:</span>
+        <span class="n">contour_order</span> <span class="o">=</span> <span class="n">CONTOUR_ORDER_Nz_EQUATOR</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">equator</span> <span class="o">==</span> <span class="s2">&quot;Fpz-T8-Oz-T7&quot;</span>
+        <span class="n">contour_order</span> <span class="o">=</span> <span class="n">CONTOUR_ORDER_Fpz_EQUATOR</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">contour_order_late</span> <span class="o">=</span> <span class="n">CONTOUR_ORDER_Fpz_EQUATOR</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span>
+
+    <span class="c1"># draw everything that we can draw</span>
+    <span class="k">for</span> <span class="n">contour</span> <span class="ow">in</span> <span class="n">contour_order</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">_add_points_along_contour</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">contour</span><span class="p">)</span>
+
+    <span class="c1"># for the Fpz equator, we need to compute some points &quot;manually&quot;</span>
+    <span class="c1"># before drawing final contours</span>
+    <span class="k">if</span> <span class="n">equator</span> <span class="o">==</span> <span class="s2">&quot;Fpz-T8-Oz-T7&quot;</span><span class="p">:</span>
+        <span class="n">frac_modifier</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">CONTOUR_ORDER_Fpz_EQUATOR</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">other_ps</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">p_to_find</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;OIz&quot;</span><span class="p">,</span> <span class="s2">&quot;Iz&quot;</span><span class="p">,</span> <span class="s2">&quot;NFpz&quot;</span><span class="p">,</span> <span class="s2">&quot;Nz&quot;</span><span class="p">,</span> <span class="s2">&quot;T10h&quot;</span><span class="p">,</span> <span class="s2">&quot;T10&quot;</span><span class="p">,</span> <span class="s2">&quot;T9h&quot;</span><span class="p">,</span> <span class="s2">&quot;T9&quot;</span><span class="p">]</span>
+        <span class="n">p_fracs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">p_arc</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">[(</span><span class="n">front</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">back</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="o">+</span> <span class="p">[(</span><span class="n">back</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">front</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="o">+</span> <span class="p">[(</span><span class="n">left</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">right</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="o">+</span> <span class="p">[(</span><span class="n">right</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">left</span><span class="p">)][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">frac</span><span class="p">,</span> <span class="n">arc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">p_to_find</span><span class="p">,</span> <span class="n">p_fracs</span><span class="p">,</span> <span class="n">p_arc</span><span class="p">):</span>
+            <span class="n">other_ps</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_point_at_fraction</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">arc</span><span class="p">,</span> <span class="n">frac</span><span class="o">=</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">frac</span> <span class="o">*</span> <span class="n">frac_modifier</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># append to data frame</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">_append_ps_to_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">other_ps</span><span class="p">)</span>
+
+        <span class="c1"># draw final contours for Fpz equator</span>
+        <span class="k">for</span> <span class="n">contour</span> <span class="ow">in</span> <span class="n">contour_order_late</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">_add_points_along_contour</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">contour</span><span class="p">)</span>
+
+    <span class="c1"># get landmark coordinates</span>
+    <span class="c1"># ------------------------</span>
+    <span class="c1"># based on our assumptions: Nz=NAS, T9=LPA, T10=RPA</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;Nz&quot;</span><span class="p">,</span> <span class="s2">&quot;T9&quot;</span><span class="p">,</span> <span class="s2">&quot;T10&quot;</span><span class="p">]),</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="n">to_replace</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">Nz</span><span class="o">=</span><span class="s2">&quot;NAS&quot;</span><span class="p">,</span> <span class="n">T9</span><span class="o">=</span><span class="s2">&quot;LPA&quot;</span><span class="p">,</span> <span class="n">T10</span><span class="o">=</span><span class="s2">&quot;RPA&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># if we need to return an mne montage, we need the actual coordinates</span>
+    <span class="c1"># as ndarrays</span>
+    <span class="k">if</span> <span class="n">as_mne_montage</span><span class="p">:</span>
+        <span class="c1"># based on our assumptions: Nz=NAS, T9=LPA, T10=RPA</span>
+        <span class="n">landmark_pos</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;NAS&quot;</span><span class="p">,</span> <span class="s2">&quot;LPA&quot;</span><span class="p">,</span> <span class="s2">&quot;RPA&quot;</span><span class="p">]:</span>
+            <span class="n">landmark_pos</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">landmark_pos</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+    <span class="c1"># subselect electrodes</span>
+    <span class="c1"># --------------------</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elec_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">elec_names</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">system</span> <span class="o">+</span> <span class="n">LANDMARKS</span><span class="p">)</span>
+    <span class="n">df_selection</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">selection</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># add special elec positions</span>
+    <span class="n">pos_to_add</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">elec</span> <span class="ow">in</span> <span class="n">elec_names_special</span><span class="p">:</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">modifier_str</span> <span class="o">=</span> <span class="n">elec</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+        <span class="n">modifier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">modifier_str</span><span class="p">))</span>
+        <span class="n">original</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">original</span> <span class="o">+</span> <span class="n">modifier</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">],</span> <span class="p">[</span><span class="n">name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]):</span>
+            <span class="n">pos_to_add</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos_to_add</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="p">[])</span> <span class="o">+</span> <span class="p">[</span><span class="n">val</span><span class="p">]</span>
+
+    <span class="c1"># re-name aliases of special elec positions, then add</span>
+    <span class="n">pos_to_add_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">pos_to_add</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos_to_add_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">pos_to_add_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos_to_add_df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">to_replace</span><span class="o">=</span><span class="n">elec_names_replaced_special</span>
+        <span class="p">)</span>
+        <span class="n">df_selection</span> <span class="o">=</span> <span class="n">df_selection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">pos_to_add_df</span><span class="p">,</span>
+            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># re-rename remaining aliases</span>
+    <span class="n">df_selection</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_selection</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="n">to_replace</span><span class="o">=</span><span class="n">elec_names_replaced</span>
+    <span class="p">)</span>
+
+    <span class="c1"># return as mne DigMontage object (or not)</span>
+    <span class="c1"># ----------------------------------------</span>
+    <span class="k">if</span> <span class="n">as_mne_montage</span><span class="p">:</span>
+        <span class="c1"># check that we have an appropriate version</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;mne&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="s2">&quot;if `as_mne_montage` is True, you must have mne installed.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">mne</span>
+
+            <span class="n">mne_version</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">__version__</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;You need to update your mne installation. Version </span><span class="si">{</span><span class="n">MNE_REQUIREMENT</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;or higher is required, but you have </span><span class="si">{</span><span class="n">mne_version</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="n">mne_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="n">MNE_REQUIREMENT</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># now convert to DigMontage</span>
+        <span class="c1"># NOTE: set to MNE default head size radius (in meters)</span>
+        <span class="c1"># drop potential duplicates first</span>
+        <span class="n">df_selection</span> <span class="o">=</span> <span class="n">df_selection</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span>
+        <span class="n">ch_pos_from_df</span> <span class="o">=</span> <span class="n">df_selection</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+        <span class="n">ch_pos</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">ch_pos_from_df</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;NAS&quot;</span><span class="p">,</span> <span class="s2">&quot;LPA&quot;</span><span class="p">,</span> <span class="s2">&quot;RPA&quot;</span><span class="p">]:</span>
+                <span class="c1"># landmarks are not electrode positions</span>
+                <span class="k">continue</span>
+
+            <span class="n">ch_pos</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">val</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="o">*</span> <span class="n">mne</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">HEAD_SIZE_DEFAULT</span>
+            <span class="p">)</span>
+
+        <span class="n">NAS</span> <span class="o">=</span> <span class="n">landmark_pos</span><span class="p">[</span><span class="s2">&quot;NAS&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mne</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">HEAD_SIZE_DEFAULT</span>
+        <span class="n">LPA</span> <span class="o">=</span> <span class="n">landmark_pos</span><span class="p">[</span><span class="s2">&quot;LPA&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mne</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">HEAD_SIZE_DEFAULT</span>
+        <span class="n">RPA</span> <span class="o">=</span> <span class="n">landmark_pos</span><span class="p">[</span><span class="s2">&quot;RPA&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">mne</span><span class="o">.</span><span class="n">defaults</span><span class="o">.</span><span class="n">HEAD_SIZE_DEFAULT</span>
+
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">make_dig_montage</span><span class="p">(</span>
+            <span class="n">ch_pos</span><span class="o">=</span><span class="n">ch_pos</span><span class="p">,</span> <span class="n">nasion</span><span class="o">=</span><span class="n">NAS</span><span class="p">,</span> <span class="n">lpa</span><span class="o">=</span><span class="n">LPA</span><span class="p">,</span> <span class="n">rpa</span><span class="o">=</span><span class="n">RPA</span>
+        <span class="p">)</span>
+
+        <span class="c1"># return early</span>
+        <span class="k">return</span> <span class="n">coords</span>
+
+    <span class="c1"># drop landmarks (or not)</span>
+    <span class="c1"># -----------------------</span>
+    <span class="k">if</span> <span class="n">drop_landmarks</span><span class="p">:</span>
+        <span class="n">df_selection</span> <span class="o">=</span> <span class="n">df_selection</span><span class="p">[</span><span class="o">~</span><span class="n">df_selection</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;NAS&quot;</span><span class="p">,</span> <span class="s2">&quot;LPA&quot;</span><span class="p">,</span> <span class="s2">&quot;RPA&quot;</span><span class="p">])]</span>
+
+    <span class="c1"># project to 2d (or not)</span>
+    <span class="c1"># ----------------------</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="s2">&quot;2d&quot;</span><span class="p">:</span>
+        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">_stereographic_projection</span><span class="p">(</span>
+            <span class="n">df_selection</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+            <span class="n">df_selection</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+            <span class="n">df_selection</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="n">df_selection</span> <span class="o">=</span> <span class="n">df_selection</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]]</span>
+        <span class="n">df_selection</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xs</span>
+        <span class="n">df_selection</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ys</span>
+
+    <span class="n">df_selection</span> <span class="o">=</span> <span class="n">df_selection</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">df_selection</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">coords</span></div>
+
+
+<span class="k">def</span> <span class="nf">_produce_files_and_do_x</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;save&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Produce electrode positions and save them.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : str</span>
+<span class="sd">        What to do after producing each file. Can be &quot;save&quot;, or &quot;compare&quot; to</span>
+<span class="sd">        compare the produced file to a previously saved file.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    use as follows from the command line:</span>
+
+<span class="sd">    python -c &quot;from eeg_positions.compute import _produce_files_and_do_x;\</span>
+<span class="sd">        _produce_files_and_do_x()&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># which decimal precision to use for saving the data</span>
+    <span class="n">precision</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="n">fpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+    <span class="n">fname_template</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;standard_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">.tsv&quot;</span><span class="p">)</span>
+
+    <span class="c1"># For each equator for each system for both 2D and 3D</span>
+    <span class="k">for</span> <span class="n">equator</span> <span class="ow">in</span> <span class="n">ACCEPTED_EQUATORS</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;1020&quot;</span><span class="p">,</span> <span class="s2">&quot;1010&quot;</span><span class="p">,</span> <span class="s2">&quot;1005&quot;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;2D&quot;</span><span class="p">,</span> <span class="s2">&quot;3D&quot;</span><span class="p">]:</span>
+                <span class="n">coords</span> <span class="o">=</span> <span class="n">get_elec_coords</span><span class="p">(</span>
+                    <span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span>
+                    <span class="n">elec_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">drop_landmarks</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                    <span class="n">as_mne_montage</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">equator</span><span class="o">=</span><span class="n">equator</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">fname_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">equator</span><span class="p">,</span> <span class="n">system</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;save&quot;</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">coords</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+                        <span class="n">fname</span><span class="p">,</span>
+                        <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">na_rep</span><span class="o">=</span><span class="s2">&quot;n/a&quot;</span><span class="p">,</span>
+                        <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">float_format</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;%.</span><span class="si">{</span><span class="n">precision</span><span class="si">}</span><span class="s2">f&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;compare&quot;</span>
+                    <span class="n">coords_read</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="s2">&quot;2D&quot;</span> <span class="k">else</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">]</span>
+                    <span class="n">data_read</span> <span class="o">=</span> <span class="n">coords_read</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+                    <span class="n">data_produced</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">precision</span><span class="p">)</span>
+
+                    <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">data_read</span><span class="p">,</span> <span class="n">data_produced</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018-2021, Stefan Appelhoff.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

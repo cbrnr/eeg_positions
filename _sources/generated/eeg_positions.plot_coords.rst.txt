@@ -1,0 +1,11 @@
+﻿eeg\_positions.plot\_coords
+===========================
+
+.. currentmodule:: eeg_positions
+
+.. autofunction:: plot_coords
+
+.. _sphx_glr_backreferences_eeg_positions.plot_coords:
+
+.. minigallery:: eeg_positions.plot_coords
+    :add-heading:
