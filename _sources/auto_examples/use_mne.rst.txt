@@ -125,20 +125,11 @@ the electrode positions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-47
-
-Note how in the output above it says
-
-    3 duplicate electrode labels found:
-    Nz/NAS, T10/RPA, T9/LPA
-
-This is due to our spherical head model, where the anatomical landmarks
-``NAS``, ``LPA``, and ``RPA`` coincide with the ``Nz``, ``T9``, and ``T10``
-electrodes.
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 Now let's have a look at plotting this in 3D.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-54
+.. GENERATED FROM PYTHON SOURCE LINES 38-45
 
 .. code-block:: default
 
@@ -170,7 +161,7 @@ Now let's have a look at plotting this in 3D.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-63
+.. GENERATED FROM PYTHON SOURCE LINES 46-54
 
 The above plot already looks useful, but you can make it even more useful if you run
 the code in an interactive session using the Matplotlib Qt backend, because then you
@@ -181,7 +172,7 @@ lying on the ``"Fpz-T8-Oz-T7"`` electrode contour line.
 So far, we only saw it for ``"Nz-T10-Iz-T9"``, which is the recommended
 default.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-81
+.. GENERATED FROM PYTHON SOURCE LINES 54-72
 
 .. code-block:: default
 

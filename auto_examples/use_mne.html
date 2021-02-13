@@ -138,14 +138,6 @@ Ready.
 &lt;Figure size 640x640 with 1 Axes&gt;
 </pre></div>
 </div>
-<p>Note how in the output above it says</p>
-<blockquote>
-<div><p>3 duplicate electrode labels found:
-Nz/NAS, T10/RPA, T9/LPA</p>
-</div></blockquote>
-<p>This is due to our spherical head model, where the anatomical landmarks
-<code class="docutils literal notranslate"><span class="pre">NAS</span></code>, <code class="docutils literal notranslate"><span class="pre">LPA</span></code>, and <code class="docutils literal notranslate"><span class="pre">RPA</span></code> coincide with the <code class="docutils literal notranslate"><span class="pre">Nz</span></code>, <code class="docutils literal notranslate"><span class="pre">T9</span></code>, and <code class="docutils literal notranslate"><span class="pre">T10</span></code>
-electrodes.</p>
 <p>Now let’s have a look at plotting this in 3D.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># but let&#39;s pick a system that has fewer electrodes</span>
 <a href="https://mne.tools/dev/generated/mne.channels.DigMontage.html#mne.channels.DigMontage" title="mne.channels.DigMontage" class="sphx-glr-backref-module-mne-channels sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">coords</span></a> <span class="o">=</span> <a href="../generated/eeg_positions.get_elec_coords.html#eeg_positions.get_elec_coords" title="eeg_positions.get_elec_coords" class="sphx-glr-backref-module-eeg_positions sphx-glr-backref-type-py-function"><span class="n">get_elec_coords</span></a><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="s2">&quot;1010&quot;</span><span class="p">,</span> <span class="n">as_mne_montage</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
