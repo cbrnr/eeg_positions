@@ -157,6 +157,10 @@ Now let's have a look at plotting this in 3D.
     Creating RawArray with float64 data, n_channels=71, n_times=1
         Range : 0 ... 0 =      0.000 ...     0.000 secs
     Ready.
+    /opt/hostedtoolcache/Python/3.7.10/x64/lib/python3.7/site-packages/mne/viz/utils.py:1019: MatplotlibDeprecationWarning: Axes3D(fig) adding itself to the figure is deprecated since 3.4. Pass the keyword argument auto_add_to_figure=False and use fig.add_axes(ax) to suppress this warning. The default value of auto_add_to_figure will change to False in mpl3.5 and True values will no longer work in 3.6.  This is consistent with other Axes classes.
+      Axes3D(fig)
+    /opt/hostedtoolcache/Python/3.7.10/x64/lib/python3.7/site-packages/mne/viz/utils.py:1020: MatplotlibDeprecationWarning: Calling gca() with keyword arguments was deprecated in Matplotlib 3.4. Starting two minor releases later, gca() will take no keyword arguments. The gca() function should only be used to get the current axes, or if no axes exist, create new axes with default keyword arguments. To create a new axes with non-default arguments, use plt.axes() or plt.subplot().
+      ax = fig.gca(projection='3d')
 
 
 
