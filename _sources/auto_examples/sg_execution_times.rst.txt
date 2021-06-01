@@ -5,12 +5,12 @@
 
 Computation times
 =================
-**00:04.742** total execution time for **auto_examples** files:
+**00:04.226** total execution time for **auto_examples** files:
 
 +-------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_positions.py` (``plot_positions.py``) | 00:02.120 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_positions.py` (``plot_positions.py``) | 00:01.842 | 0.0 MB |
 +-------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_use_mne.py` (``use_mne.py``)               | 00:01.987 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_use_mne.py` (``use_mne.py``)               | 00:01.823 | 0.0 MB |
 +-------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_use_elec_names.py` (``use_elec_names.py``) | 00:00.636 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_use_elec_names.py` (``use_elec_names.py``) | 00:00.562 | 0.0 MB |
 +-------------------------------------------------------------------------+-----------+--------+
