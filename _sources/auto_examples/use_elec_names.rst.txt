@@ -595,9 +595,10 @@ Plot it, and see how close LPA and A1 (and RPA and A2) are in space.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_use_elec_names_001.png
-    :alt: use elec names
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_use_elec_names_001.png
+   :alt: use elec names
+   :srcset: /auto_examples/images/sphx_glr_use_elec_names_001.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
