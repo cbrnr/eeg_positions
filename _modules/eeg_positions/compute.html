@@ -86,7 +86,7 @@
             
   <h1>Source code for eeg_positions.compute</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Calculate standard EEG electrode positions on a sphere.&quot;&quot;&quot;</span>
-<span class="c1"># Copyright (c) 2018-2021, Stefan Appelhoff</span>
+<span class="c1"># Copyright (c) 2018-2022, Stefan Appelhoff</span>
 <span class="c1"># BSD-3-Clause</span>
 
 <span class="kn">import</span> <span class="nn">ast</span>
@@ -498,7 +498,7 @@
     <span class="n">tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
         <span class="n">to_replace</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">Nz</span><span class="o">=</span><span class="s2">&quot;NAS&quot;</span><span class="p">,</span> <span class="n">T9</span><span class="o">=</span><span class="s2">&quot;LPA&quot;</span><span class="p">,</span> <span class="n">T10</span><span class="o">=</span><span class="s2">&quot;RPA&quot;</span><span class="p">)</span>
     <span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">tmp</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># if we need to return an mne montage, we need the actual coordinates</span>
     <span class="c1"># as ndarrays</span>
@@ -533,11 +533,7 @@
         <span class="n">pos_to_add_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos_to_add_df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="n">to_replace</span><span class="o">=</span><span class="n">elec_names_replaced_special</span>
         <span class="p">)</span>
-        <span class="n">df_selection</span> <span class="o">=</span> <span class="n">df_selection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">pos_to_add_df</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">df_selection</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_selection</span><span class="p">,</span> <span class="n">pos_to_add_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># re-rename remaining aliases</span>
     <span class="n">df_selection</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_selection</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>

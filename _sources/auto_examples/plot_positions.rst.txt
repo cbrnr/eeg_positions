@@ -28,7 +28,7 @@ Plot electrode positions
 
 .. code-block:: default
 
-    # Copyright (c) 2018-2021, Stefan Appelhoff
+    # Copyright (c) 2018-2022, Stefan Appelhoff
     # BSD-3-Clause
 
 
@@ -77,59 +77,6 @@ Let's start with the basic 10-20 system in 2 dimensions (``"x"`` and ``"y"``).
 
 
 
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/compute.py:414: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
 
 
 .. raw:: html
@@ -274,52 +221,6 @@ and ``RPA``. We can drop these by passing the ``drop_landmarks=True`` to
 
  .. code-block:: none
 
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/compute.py:414: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
 
     <Figure size 640x480 with 1 Axes>
 
@@ -360,52 +261,6 @@ We can also plot in 3D. Let's pick a system with more electrodes now.
 
  .. code-block:: none
 
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/utils.py:208: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
-    /home/runner/work/eeg_positions/eeg_positions/eeg_positions/compute.py:414: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-      df = df.append(tmp, ignore_index=True, sort=True)
 
     <Figure size 640x480 with 1 Axes>
 
