@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>eeg_positions.find_point_at_fraction &#8212; eeg_positions 2.1.0.dev0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
@@ -17,6 +17,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
@@ -87,7 +88,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="documentwrapper">
@@ -97,7 +98,7 @@
           <div class="body" role="main">
             
   <section id="eeg-positions-find-point-at-fraction">
-<h1>eeg_positions.find_point_at_fraction<a class="headerlink" href="#eeg-positions-find-point-at-fraction" title="Permalink to this headline">¶</a></h1>
+<h1>eeg_positions.find_point_at_fraction<a class="headerlink" href="#eeg-positions-find-point-at-fraction" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="eeg_positions.find_point_at_fraction">
 <span class="sig-prename descclassname"><span class="pre">eeg_positions.</span></span><span class="sig-name descname"><span class="pre">find_point_at_fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/eeg_positions/utils.html#find_point_at_fraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eeg_positions.find_point_at_fraction" title="Permalink to this definition">¶</a></dt>
@@ -109,7 +110,7 @@ assumption, for fractions of zero, <cite>point</cite> will equal <cite>p1</cite>
 of one, <cite>point</cite> will equal <cite>p3</cite>; and for fractions of one half, <cite>point</cite>
 will equal <cite>p2</cite> <a class="reference internal" href="#r6114884abc0c-1" id="id1">[1]</a>.</p>
 <dl class="field-list">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>p1, p2, p3</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a></span></dt><dd><p>Each tuple containing x, y, z cartesian coordinates.</p>
 </dd>
@@ -118,7 +119,7 @@ to find coordinates of <cite>point</cite>.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
 <dt><strong>point</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.10)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a></span></dt><dd><p>The x, y, z cartesian coordinates of the point at fraction.</p>
 </dd>
@@ -130,14 +131,15 @@ to find coordinates of <cite>point</cite>.</p>
 equidistant from the origin. They must not be collinear (i.e., all be
 along one line) and none of the points may be equal.</p>
 <p class="rubric">References</p>
-<dl class="citation">
-<dt class="label" id="r6114884abc0c-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>Nominal Animal
+<div role="list" class="citation-list">
+<div class="citation" id="r6114884abc0c-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Nominal Animal
 (<a class="reference external" href="https://math.stackexchange.com/users/318422/nominal-animal">https://math.stackexchange.com/users/318422/nominal-animal</a>),
 find intermediate points on small circle of a sphere,
 URL (version: 2018-06-02): <a class="reference external" href="https://math.stackexchange.com/q/2805204">https://math.stackexchange.com/q/2805204</a></p>
-</dd>
-</dl>
+</div>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>

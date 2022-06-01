@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>API Documentation &#8212; eeg_positions 2.1.0.dev0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -17,6 +17,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
@@ -85,7 +86,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="documentwrapper">
@@ -95,7 +96,7 @@
           <div class="body" role="main">
             
   <section id="api-documentation">
-<span id="docs-api"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<span id="docs-api"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading">¶</a></h1>
 <p>All functions described here can be imported from the <a class="reference internal" href="#module-eeg_positions" title="eeg_positions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eeg_positions</span></code></a> package.</p>
 <span class="target" id="module-eeg_positions"></span><p>Compute and plot standard EEG electrode positions.</p>
 <p>The <a class="reference internal" href="generated/eeg_positions.find_point_at_fraction.html#eeg_positions.find_point_at_fraction" title="eeg_positions.find_point_at_fraction"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_point_at_fraction()</span></code></a> function contains the key algorithm for computing the
@@ -103,10 +104,6 @@ standard EEG electode positions on a sphere.
 You will most likely not need to use this function in your code directly,
 but it is still made available over the API and the documentation for its key role in the code.</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/eeg_positions.find_point_at_fraction.html#eeg_positions.find_point_at_fraction" title="eeg_positions.find_point_at_fraction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_point_at_fraction</span></code></a>(p1, p2, p3, frac)</p></td>
 <td><p>Find a point on an arc spanned by three points.</p></td>
@@ -116,10 +113,6 @@ but it is still made available over the API and the documentation for its key ro
 <p>The practically most useful functions are listed below.
 These will help you to get the electrode positions you need in a usable format</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/eeg_positions.get_elec_coords.html#eeg_positions.get_elec_coords" title="eeg_positions.get_elec_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_elec_coords</span></code></a>([system, elec_names, ...])</p></td>
 <td><p>Get standard EEG electrode coordinates.</p></td>
@@ -135,10 +128,6 @@ These will help you to get the electrode positions you need in a usable format</
 <p>Finally, the <a class="reference internal" href="#module-eeg_positions" title="eeg_positions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">eeg_positions</span></code></a> package also exposes a convenient function for
 visualizing electrode positions.</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/eeg_positions.plot_coords.html#eeg_positions.plot_coords" title="eeg_positions.plot_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_coords</span></code></a>(coords[, scatter_kwargs, ...])</p></td>
 <td><p>Plot standard EEG electrode coordinates.</p></td>
