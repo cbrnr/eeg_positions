@@ -100,9 +100,6 @@ the electrode positions.
 
  .. code-block:: none
 
-    Creating RawArray with float64 data, n_channels=345, n_times=1
-        Range : 0 ... 0 =      0.000 ...     0.000 secs
-    Ready.
 
     <Figure size 640x640 with 1 Axes>
 
@@ -131,14 +128,6 @@ Now let's have a look at plotting this in 3D.
    :srcset: /auto_examples/images/sphx_glr_use_mne_002.png
    :class: sphx-glr-single-img
 
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Creating RawArray with float64 data, n_channels=71, n_times=1
-        Range : 0 ... 0 =      0.000 ...     0.000 secs
-    Ready.
 
 
 
@@ -189,9 +178,6 @@ default.
 
  .. code-block:: none
 
-    Creating RawArray with float64 data, n_channels=21, n_times=1
-        Range : 0 ... 0 =      0.000 ...     0.000 secs
-    Ready.
 
     <Figure size 640x640 with 1 Axes>
 
