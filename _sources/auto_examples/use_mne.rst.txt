@@ -10,7 +10,7 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download_auto_examples_use_mne.py>`
+        :ref:`Go to the end <sphx_glr_download_auto_examples_use_mne.py>`
         to download the full example code
 
 .. rst-class:: sphx-glr-example-title
@@ -33,11 +33,9 @@ For more information, check out these MNE resources:
 
 We start with imports.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-20
+.. GENERATED FROM PYTHON SOURCE LINES 16-18
 
 .. code-block:: default
-
-    import numpy as np
 
     from eeg_positions import get_elec_coords
 
@@ -48,11 +46,11 @@ We start with imports.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Now we get the positions we want. Note the ``as_mne_montage=True`` argument.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-28
+.. GENERATED FROM PYTHON SOURCE LINES 20-26
 
 .. code-block:: default
 
@@ -75,12 +73,12 @@ Now we get the positions we want. Note the ``as_mne_montage=True`` argument.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-31
+.. GENERATED FROM PYTHON SOURCE LINES 27-29
 
 Making use of the :class:`mne.channels.DigMontage` methods, we can visualize
 the electrode positions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-34
+.. GENERATED FROM PYTHON SOURCE LINES 29-32
 
 .. code-block:: default
 
@@ -105,11 +103,11 @@ the electrode positions.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-36
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 Now let's have a look at plotting this in 3D.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-43
+.. GENERATED FROM PYTHON SOURCE LINES 34-41
 
 .. code-block:: default
 
@@ -132,7 +130,7 @@ Now let's have a look at plotting this in 3D.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-52
+.. GENERATED FROM PYTHON SOURCE LINES 42-50
 
 The above plot already looks useful, but you can make it even more useful if you run
 the code in an interactive session using the Matplotlib Qt backend, because then you
@@ -143,7 +141,7 @@ lying on the ``"Fpz-T8-Oz-T7"`` electrode contour line.
 So far, we only saw it for ``"Nz-T10-Iz-T9"``, which is the recommended
 default.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-70
+.. GENERATED FROM PYTHON SOURCE LINES 50-59
 
 .. code-block:: default
 
@@ -153,18 +151,9 @@ default.
 
     # MNE always scales the electrode positions as if the equator were on the
     # "Nz-T10-Iz-T9" contour.
-    # We need to counteract this with a few computations
-    chs = ["Oz", "Fpz", "T7", "T8"]
-    pos = np.stack([coords.get_positions()["ch_pos"][ch] for ch in chs])
-
-    radius = np.abs(pos[[2, 3], 0]).mean()
-
-    x = pos[0, 0]
-    y = pos[-1, 1]
-    z = pos[:, -1].mean()
-
-
-    coords.plot(sphere=(x, y, z, radius))
+    # We need to counteract this by setting ``sphere="eeglab"``, which scales
+    # electrode positions as if the equator were on the "Fpz-T8-Oz-T7" contour.
+    coords.plot(sphere="eeglab")
 
 
 
@@ -189,6 +178,8 @@ default.
 .. only:: html
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
+
+
 
 
     .. container:: sphx-glr-download sphx-glr-download-python
